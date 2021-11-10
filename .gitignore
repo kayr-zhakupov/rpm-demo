@@ -1,0 +1,17 @@
+# IDE specific
+
+.idea
+
+# framework specific
+
+/env.php
+/logs
+/public/css
+
+# images
+
+*.ico
+
+# extensions: generated
+
+*.min.js
