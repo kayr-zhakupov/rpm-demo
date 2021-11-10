@@ -10,10 +10,10 @@ class IndexController
   {
     Auth::i()->testMiddleware();
 
-    $this->friendsList();
+    $this->friendsIndex();
   }
 
-  protected function friendsList()
+  protected function friendsIndex()
   {
     echo 'hmm';
   }
