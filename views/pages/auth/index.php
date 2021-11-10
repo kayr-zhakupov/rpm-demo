@@ -9,8 +9,8 @@ use App\Vk\VkAuth;
 $vkAuth = new VkAuth();
 
 {
-  $vkApi = new VkApi();
-  $vkApi->fetchFriendsList();
+//  $vkApi = new VkApi();
+//  $vkApi->fetchFriendsList();
 }
 
 ?>

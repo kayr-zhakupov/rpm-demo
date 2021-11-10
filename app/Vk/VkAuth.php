@@ -29,7 +29,8 @@ class VkAuth
       http_build_query([
         'client_id' => app()->env('vk_client_id'),
         'redirect_uri' => app()->appUrl(),
-//        'revoke' => 1,
+        // запрос доступа к списку друзей
+        'scope' => 2,
       ]);
   }
 }

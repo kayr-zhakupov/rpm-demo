@@ -125,7 +125,15 @@ class Application
   public function runControllerAndDie($controller)
   {
     if ($controller !== null) {
-      $result = $controller();
+      $result = null;
+
+      try {
+        $result = $controller();
+      } catch (\Throwable $e) {
+        error_log($e);
+        http_response_code(500);
+        die('500 | Server Error');
+      }
 
       if (is_null($result)) {
         // noop
