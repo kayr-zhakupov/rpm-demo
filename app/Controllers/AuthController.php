@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Vk\VkAuth;
+
 class AuthController
 {
   public function index()
@@ -13,11 +15,23 @@ class AuthController
   {
     $code = $_GET['code'] ?? null;
 
-    if ($code !== null) {
-      dd('accept code: ', $code);
+    if (!empty($code)) {
+      $this->onReceivingCode($code);
+      return;
+    }
+
+    if (!empty($_GET)) {
+      dd($_GET);
     }
 
     header("Location: " . app()->appUrl('authorize'));
     die();
+  }
+
+  protected function onReceivingCode(string $code)
+  {
+    $accessTokenResponse = (new VkAuth())->fetchAccessToken($code);
+
+    dd($accessTokenResponse);
   }
 }

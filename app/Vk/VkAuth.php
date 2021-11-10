@@ -2,6 +2,8 @@
 
 namespace App\Vk;
 
+use App\Foundation\Fetch;
+
 /**
  * @link https://vk.com/dev/authcode_flow_user
  */
@@ -43,13 +45,21 @@ class VkAuth
       ]);
   }
 
-  protected function getObtainTokenLink(): string
+  protected function getObtainTokenLink(string $code): string
   {
     return 'https://oauth.vk.com/access_token?' .
       http_build_query([
         'client_id' => $this->clientId,
         'client_secret' => app()->env('vk_client_secret'),
         'redirect_uri' => $this->redirectUri,
+        'code' => $code,
       ]);
+  }
+
+  public function fetchAccessToken(string $code): string
+  {
+    $response = (new Fetch($this->getObtainTokenLink($code)))->request();
+
+    dd($response);
   }
 }
