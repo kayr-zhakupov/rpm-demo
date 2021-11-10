@@ -11,7 +11,10 @@ class Router
     if ($controller === null) return $response;
 
     try {
+
       $response->setBody($controller());
+      $response->setStatus(200);
+
     } catch (\Throwable $e) {
       error_log($e);
       return $response

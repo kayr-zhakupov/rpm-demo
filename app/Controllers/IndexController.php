@@ -8,13 +8,15 @@ class IndexController
 {
   public function __invoke()
   {
-    Auth::i()->testMiddleware();
+    if (Auth::i()->doPassMiddleware()) {
+      return $this->friendsIndex();
+    };
 
-    $this->friendsIndex();
+    app()->router()->runControllerAndDie([new AuthController(), 'index']);
   }
 
   protected function friendsIndex()
   {
-    echo 'hmm';
+    echo 'friends index';
   }
 }

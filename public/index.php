@@ -4,6 +4,7 @@
  * Загрузка приложения
  */
 
+use App\Controllers\AuthController;
 use App\Controllers\IndexController;
 
 require __DIR__ . '/../boot/app.php';
@@ -27,9 +28,15 @@ $controller = call_user_func(function () {
   $method = strtolower($_SERVER['REQUEST_METHOD']);
 
   switch ($requestUriNoArgs) {
+    case 'authorize/vk':
+      // приём кода авторизации со стороны ВК
+      return [new AuthController(), 'acceptCode'];
+    case 'authorize':
+      // страница авторизации
+      return ($method === 'get') ? [new AuthController(), 'index'] : null;
     case '':
       // домашняя страница
-      return (($method === 'get') ? new IndexController() : null);
+      return ($method === 'get') ? new IndexController() : null;
   }
 
   return null;

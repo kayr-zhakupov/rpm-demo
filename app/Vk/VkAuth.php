@@ -13,7 +13,7 @@ class VkAuth
   public function __construct(array $options = [])
   {
     $this->clientId = $options['client_id'] ?? app()->env('vk_client_id');
-    $this->redirectUri = $options['redirect_uri'] ?? app()->appUrl();
+    $this->redirectUri = $options['redirect_uri'] ?? app()->appUrl('authorize/vk');
   }
 
   /**

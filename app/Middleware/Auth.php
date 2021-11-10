@@ -12,11 +12,17 @@ class Auth
 
   private static Auth $instance;
 
-  public function testMiddleware()
+  /**
+   * @return bool
+   * true, если посетитель авторизован и токен активен; false otherwise
+   */
+  public function doPassMiddleware(): bool
   {
     $sessionToken = CookieUtils::get('app_session');
 
     $this->testSessionToken($sessionToken);
+
+    return false;
 
 //    if (Auth::i()->) {
 //      app()->router()->runControllerAndDie([new AuthController(), 'index']);
