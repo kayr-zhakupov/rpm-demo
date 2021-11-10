@@ -11,7 +11,7 @@ date_default_timezone_set('UTC');
 // logs
 error_reporting(-1);
 ini_set("log_errors", 1);
-ini_set("error_log", APP_BASE_PATH . '/logs/php_error.log');
+ini_set("error_log", APP_BASE_PATH . '/logs/php-error.log');
 
 // autoloader
 require APP_BASE_PATH . '/boot/autoloader.php';

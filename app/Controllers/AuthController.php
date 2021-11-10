@@ -5,6 +5,6 @@ namespace App\Controllers;
 class AuthController
 {
   public function index() {
-    echo 'yeah';
+    echo view_html('pages/auth/index');
   }
 }

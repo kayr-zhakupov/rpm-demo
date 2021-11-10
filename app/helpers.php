@@ -7,6 +7,11 @@ function app(): Application
   return Application::i();
 }
 
+function env()
+{
+  return Application::i()->env();
+}
+
 /**
  * Dump-and-die, как в Laravel
  * @param $var

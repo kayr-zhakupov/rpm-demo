@@ -139,15 +139,20 @@ class Application
     }
 
     http_response_code(404);
-    die();
+    die('404 | Not Found');
   }
 
   /**
    * @param string|null $key
    * @return array|mixed
    */
-  public function config(?string $key = null)
+  public function config(?string $key = null, $default = null)
   {
-    return ($key === null) ? $this->config : ($this->config[$key] ?? null);
+    return ($key === null) ? $this->config : ($this->config[$key] ?? $default);
+  }
+
+  public function env(?string $key = null, $default = null)
+  {
+    return ($key === null) ? $this->env : ($this->env[$key] ?? $default);
   }
 }
