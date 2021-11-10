@@ -11,4 +11,5 @@ return [
   ],
 
   'vk_client_id' => 'secret',
+  'vk_client_secret' => 'secret',
 ];

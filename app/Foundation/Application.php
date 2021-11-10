@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Foundation;
 
+use App\Foundation\Router;
 use PDO;
 use Throwable;
 
@@ -19,10 +20,13 @@ class Application
   protected array $env;
   protected array $config;
 
+  protected Router $router;
+
   public function __construct()
   {
     $this->env = require APP_BASE_PATH . '/env/env.php';
     $this->config = [];
+    $this->router = new Router();
   }
 
   public static function i()
@@ -32,6 +36,25 @@ class Application
     }
 
     return static::$instance;
+  }
+
+  /**
+   * @param string|null $key
+   * @return array|mixed
+   */
+  public function config(?string $key = null, $default = null)
+  {
+    return ($key === null) ? $this->config : ($this->config[$key] ?? $default);
+  }
+
+  public function env(?string $key = null, $default = null)
+  {
+    return ($key === null) ? $this->env : ($this->env[$key] ?? $default);
+  }
+
+  public function router(): Router
+  {
+    return $this->router;
   }
 
   /**
@@ -120,47 +143,5 @@ class Application
   public function scriptUrl(string $relName): string
   {
     return $this->appUrl('js', $relName);
-  }
-
-  public function runControllerAndDie($controller)
-  {
-    if ($controller !== null) {
-      $result = null;
-
-      try {
-        $result = $controller();
-      } catch (\Throwable $e) {
-        error_log($e);
-        http_response_code(500);
-        die('500 | Server Error');
-      }
-
-      if (is_null($result)) {
-        // noop
-      } elseif (is_array($result)) {
-        echo json_encode($result);
-      } elseif (is_scalar($result)) {
-        echo $result;
-      }
-
-      die();
-    }
-
-    http_response_code(404);
-    die('404 | Not Found');
-  }
-
-  /**
-   * @param string|null $key
-   * @return array|mixed
-   */
-  public function config(?string $key = null, $default = null)
-  {
-    return ($key === null) ? $this->config : ($this->config[$key] ?? $default);
-  }
-
-  public function env(?string $key = null, $default = null)
-  {
-    return ($key === null) ? $this->env : ($this->env[$key] ?? $default);
   }
 }

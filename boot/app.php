@@ -1,6 +1,6 @@
 <?php
 
-use App\Application;
+use App\Foundation\Application;
 
 // constants
 define("APP_BASE_PATH", realpath(__DIR__ . '/..'));
@@ -20,5 +20,4 @@ require APP_BASE_PATH . '/boot/autoloader.php';
 require APP_BASE_PATH . '/app/helpers.php';
 
 // config
-require APP_BASE_PATH . '/app/Application.php';
 Application::i();

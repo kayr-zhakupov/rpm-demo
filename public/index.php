@@ -35,4 +35,4 @@ $controller = call_user_func(function () {
   return null;
 });
 
-app()->runControllerAndDie($controller);
+app()->router()->runControllerAndDie($controller);

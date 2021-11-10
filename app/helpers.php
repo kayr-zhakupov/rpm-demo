@@ -1,6 +1,6 @@
 <?php
 
-use App\Application;
+use App\Foundation\Application;
 
 function app(): Application
 {
