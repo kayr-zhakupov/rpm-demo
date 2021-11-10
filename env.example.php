@@ -1,10 +1,10 @@
 <?php
 
 return [
-  'url' => 'secret',
+  'url' => 'http://localhost:8001',
 
   'db' => [
-    'host' => 'secret',
+    'host' => 'localhost',
     'name' => 'secret',
     'user' => 'secret',
     'pass' => 'secret',

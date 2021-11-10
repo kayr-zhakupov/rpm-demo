@@ -23,12 +23,14 @@ class Application
   protected array $config;
 
   protected Router $router;
+  protected DB $db;
 
   public function __construct()
   {
     $this->env = require APP_BASE_PATH . '/env/env.php';
     $this->config = [];
     $this->router = new Router();
+    $this->db = new DB($this->env['db']);
   }
 
   /**
@@ -50,47 +52,9 @@ class Application
     return $this->router;
   }
 
-  /**
-   * Отправитель запросов по мотивам исходного кода Laravel.
-   * Похожий механизм использовал в собственных framework-free разработках.
-   *
-   * @param string $sql
-   * @param array $bindings
-   * @param callable|null $transform
-   * @return false|\PDOStatement
-   */
-  protected function createDbStatement(string $sql, array $bindings = [], ?callable $transform = null)
+  public function db(): DB
   {
-    $dsn = sprintf(
-      "mysql:host=%s;dbname=%s;charset=UTF8",
-      $this->env['db']['host'] ?? '',
-      $this->env['db']['name'] ?? '',
-    );
-    $user = $this->env['db']['user'] ?? '';
-    $password = $this->env['db']['pass'] ?? '';
-
-    $options = [
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    ];
-
-    $pdo = new PDO($dsn, $user, $password, $options);
-
-    $pdo->prepare("SET NAMES utf8; SET time_zone = 'utc'")->execute();
-
-    $statement = $pdo->prepare($sql);
-    foreach ($bindings as $key => $value) {
-      $statement->bindValue(
-        ":$key",
-        $value,
-        is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR,
-      );
-    }
-
-    if ($transform !== null) {
-      $transform($statement, $pdo);
-    }
-
-    return $statement;
+    return $this->db;
   }
 
   protected function dbExecuteStatement(string $sql, array $bindings = [], ?callable $transform = null)
