@@ -2,7 +2,7 @@
 
 namespace App\Foundation;
 
-use App\Foundation\Router;
+use App\Foundation\Concerns\IsSingleton;
 use PDO;
 use Throwable;
 
@@ -11,7 +11,9 @@ use Throwable;
  */
 class Application
 {
-  protected static Application $instance;
+  use IsSingleton;
+
+  private static Application $instance;
 
   /**
    * Секретные данные вне VCS
@@ -27,15 +29,6 @@ class Application
     $this->env = require APP_BASE_PATH . '/env/env.php';
     $this->config = [];
     $this->router = new Router();
-  }
-
-  public static function i()
-  {
-    if (!isset(static::$instance)) {
-      static::$instance = new static();
-    }
-
-    return static::$instance;
   }
 
   /**

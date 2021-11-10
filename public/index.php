@@ -4,7 +4,7 @@
  * Загрузка приложения
  */
 
-use App\Controllers\AuthController;
+use App\Controllers\IndexController;
 
 require __DIR__ . '/../boot/app.php';
 
@@ -29,7 +29,7 @@ $controller = call_user_func(function () {
   switch ($requestUriNoArgs) {
     case '':
       // домашняя страница
-      return (($method === 'get') ? [new AuthController(), 'index'] : null);
+      return (($method === 'get') ? new IndexController() : null);
   }
 
   return null;

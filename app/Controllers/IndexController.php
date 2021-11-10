@@ -2,13 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Middleware\Auth;
+
 class IndexController
 {
   public function __invoke()
   {
-    if (false) {
-      app()->router()->runControllerAndDie([new AuthController(), 'index']);
-    }
+    Auth::i()->testMiddleware();
 
     $this->friendsList();
   }

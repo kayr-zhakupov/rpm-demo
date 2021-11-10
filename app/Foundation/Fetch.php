@@ -48,8 +48,6 @@ class Fetch
     curl_close($ch);
 
     // TODO 2021-07-22T20:33:55 headers
-    return new CurlResponse($info['http_code'], $body, [
-      'curl_info' => $info,
-    ]);
+    return new CurlResponse($info['http_code'], $body, $info);
   }
 }
