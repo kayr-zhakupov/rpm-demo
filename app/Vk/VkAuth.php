@@ -85,4 +85,13 @@ class VkAuth
 
     die($response->getNestedValue('error_description'));
   }
+
+  public function _mock_fetchAccessTokenResponse_success(string $code): CurlResponse
+  {
+    return new CurlResponse(
+      200,
+      '{"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":66748}',
+      []
+    );
+  }
 }

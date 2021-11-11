@@ -23,10 +23,6 @@ class Auth
     $this->testSessionToken($sessionToken);
 
     return false;
-
-//    if (Auth::i()->) {
-//      app()->router()->runControllerAndDie([new AuthController(), 'index']);
-//    }
   }
 
   private function testSessionToken(string $sessionToken): bool

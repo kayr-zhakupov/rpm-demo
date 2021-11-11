@@ -21,12 +21,15 @@ class VkAccessTokens
       'expires_at',
       'created_at',
     ]));
-    dd($values);
 
     $db = app()->db();
 
     $sql = $db->sqlInsertQuery('vk_access_tokens', $values);
 
-    return $db->statement($sql, $values)->rowCount();
+    $statement = $db->statement($sql, $values);
+
+    $statement->execute();
+
+    return $statement->rowCount();
   }
 }
