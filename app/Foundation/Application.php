@@ -57,36 +57,6 @@ class Application
     return $this->db;
   }
 
-  protected function dbExecuteStatement(string $sql, array $bindings = [], ?callable $transform = null)
-  {
-    $statement = $this->createDbStatement($sql, $bindings, $transform);
-
-    try {
-      $statement->execute();
-    } catch (Throwable $e) {
-      $this->handleError($e);
-    }
-
-    return $statement;
-  }
-
-  public function dbExecuteAffectingQuery(string $sql, array $bindings = [], ?callable $transform = null): int
-  {
-    return $this->dbExecuteStatement($sql, $bindings, $transform)->rowCount();
-  }
-
-  public function dbSelect(string $sql, array $bindings = [], ?callable $transform = null)
-  {
-    return $this->dbExecuteStatement($sql, $bindings, $transform)->fetchAll();
-  }
-
-  protected function handleError(Throwable $e)
-  {
-    echo $e;
-    echo PHP_EOL;
-    die();
-  }
-
   public function appUrl(...$parts): string
   {
     return implode('/', array_filter(array_merge([$this->env['url'] ?? ''], $parts)));

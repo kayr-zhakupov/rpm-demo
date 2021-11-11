@@ -77,3 +77,26 @@ function view_html(string $path, array $data = []): string
 
   return ob_get_clean();
 }
+
+function arr_get($array, $key, $default = null)
+{
+  if ($key === null) return $array;
+
+  if (!is_array($array)) return $default;
+
+  if (strpos($key, '.') === false) {
+    return $array[$key] ?? $default;
+  }
+
+  $result = $array;
+  foreach (explode('.', $key) as $segment) {
+    if (is_array($result) && array_key_exists($segment, $result)) {
+      $result = $result[$segment];
+      continue;
+    }
+
+    return $default;
+  }
+
+  return $result;
+}

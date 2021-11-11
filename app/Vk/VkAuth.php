@@ -82,6 +82,10 @@ class VkAuth
     ))
       ->request();
 
-    dd($response);
+    if ($response->isOk()) {
+      dd($response);
+    }
+
+    die($response->getNestedValue('error_description'));
   }
 }
