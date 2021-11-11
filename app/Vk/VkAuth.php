@@ -2,6 +2,7 @@
 
 namespace App\Vk;
 
+use App\Foundation\CurlResponse;
 use App\Foundation\Fetch;
 
 /**
@@ -71,19 +72,15 @@ class VkAuth
     ]));
   }
 
-  public function fetchAccessToken(string $code): string
+  public function fetchAccessTokenResponse(string $code): CurlResponse
   {
-    $host = $this->getHost();
-
     $response = (new Fetch(
-      $this->getObtainTokenLink($code), 'get', [
-        'Host: ' . $host,
-      ]
+      $this->getObtainTokenLink($code), 'get'
     ))
       ->request();
 
     if ($response->isOk()) {
-      dd($response);
+      return $response;
     }
 
     die($response->getNestedValue('error_description'));

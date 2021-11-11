@@ -100,3 +100,24 @@ function arr_get($array, $key, $default = null)
 
   return $result;
 }
+
+/**
+ * Случайная alpha-numeric строка заданной длины (из Laravel).
+ *
+ * @param int $length
+ * @return string
+ */
+function random_alnum(int $length)
+{
+  $string = '';
+
+  while (($len = strlen($string)) < $length) {
+    $size = $length - $len;
+
+    $bytes = random_bytes($size);
+
+    $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+  }
+
+  return $string;
+}

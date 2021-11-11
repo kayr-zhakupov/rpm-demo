@@ -7,7 +7,7 @@ $sql = implode('', [
   implode(', ', [
     "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
     "app_token VARCHAR(64) NOT NULL",
-    "vk_token VARCHAR(64) NOT NULL",
+    "vk_token VARCHAR(128) NOT NULL",
     "user_id VARCHAR(16) NOT NULL",
     "ip_address VARCHAR(32) NOT NULL",
     "expires_at TIMESTAMP NOT NULL",

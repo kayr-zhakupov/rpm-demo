@@ -71,4 +71,24 @@ class Application
   {
     return $this->appUrl('js', $relName);
   }
+
+  /**
+   * Обрезание path, если в APP_URL указан путь с дополнительным внутренним путём.
+   * @return string
+   */
+  public function host(bool $doIncludeScheme = false): string
+  {
+    $urlParts = parse_url(app()->appUrl());
+    extract($urlParts);
+    return implode('', array_filter([
+      ($doIncludeScheme && ($scheme = $scheme ?? '')) ? ($scheme . '://') : null,
+      $host ?? $path ?? '',
+    ]));
+  }
+
+  public function isHostSecure(): bool
+  {
+    $urlParts = parse_url(app()->appUrl());
+    return ($urlParts['scheme'] === 'https');
+  }
 }

@@ -8,6 +8,8 @@ class CurlResponse
   protected string $rawBody;
   protected array $curlInfo;
 
+  protected ?array $jsonBodyDecoded;
+
   public function __construct($status, $rawBody, $curlInfo)
   {
     $this->status = (int)($status ?: 0);
@@ -27,18 +29,21 @@ class CurlResponse
     throw new \Exception('Response status ' . $this->status);
   }
 
+  public function getJsonDecoded(): ?array
+  {
+    if (!isset($this->jsonBodyDecoded)) {
+      $this->jsonBodyDecoded = json_decode($this->rawBody, true);
+
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        $this->jsonBodyDecoded = null;
+      }
+    }
+
+    return $this->jsonBodyDecoded;
+  }
+
   public function getNestedValue(string $path, $default = null)
   {
-    try {
-      $decoded = json_decode($this->rawBody, true);
-
-      if ($decoded === false) throw new \Exception(json_last_error_msg());
-
-      return arr_get($decoded, $path, $default);
-
-    } catch (\Throwable $e) {
-      error_log($e);
-      die("Response decode error");
-    }
+    return arr_get($this->getJsonDecoded(), $path, $default);
   }
 }

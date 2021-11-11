@@ -73,4 +73,24 @@ class DB
 
     return $statement;
   }
+
+  /**
+   * В качестве меры безопасности в результирующей строке запроса используются placeholders вместо значений.
+   * @param string $table
+   * @param array $values
+   * @return string
+   */
+  public function sqlInsertQuery(string $table, array $values)
+  {
+    $setPartStr = implode(',', array_map(function (string $column) {
+      return sprintf("%s = :%s", $column, $column);
+    }, array_keys($values)));
+
+    return 'INSERT INTO "' . $table . '" SET ' . $setPartStr;
+  }
+
+  public function mysqlDateTimeFormat(\DateTime $dt): string
+  {
+    return (clone $dt)->setTimezone(new \DateTimeZone('utc'))->format("Y-m-d H:i:s");
+  }
 }

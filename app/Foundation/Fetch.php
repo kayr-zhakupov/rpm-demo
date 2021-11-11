@@ -6,17 +6,15 @@ class Fetch
 {
   protected string $url;
   protected string $method;
-  protected array $headers;
 
   /**
    * @param string $url
    * @param string $method
    */
-  public function __construct(string $url, string $method = 'get', array $headers = [])
+  public function __construct(string $url, string $method = 'get')
   {
     $this->url = $url;
     $this->method = strtolower($method);
-    $this->headers = $headers;
   }
 
   public function request(): CurlResponse
