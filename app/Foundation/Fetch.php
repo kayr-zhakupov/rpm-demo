@@ -6,30 +6,29 @@ class Fetch
 {
   protected string $url;
   protected string $method;
+  protected array $headers;
 
   /**
    * @param string $url
    * @param string $method
    */
-  public function __construct(string $url, string $method = 'get')
+  public function __construct(string $url, string $method = 'get', array $headers = [])
   {
     $this->url = $url;
     $this->method = strtolower($method);
+    $this->headers = $headers;
   }
 
   public function request(): CurlResponse
   {
     $ch = curl_init($this->url);
-    $rawHeaders = [];
 
     curl_setopt_array($ch, [
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_HEADER => true,
-      CURLOPT_CUSTOMREQUEST => $this->method,
-      CURLOPT_HEADERFUNCTION => function ($ch, $rawHeader) use (&$rawHeaders) {
-        $rawHeaders[] = trim($rawHeader);
-        return strlen($rawHeader);
-      },
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_USERAGENT => $_SERVER['HTTP_USER_AGENT'],
+      CURLOPT_CUSTOMREQUEST => strtoupper($this->method),
     ]);
 
     $result = curl_exec($ch);
