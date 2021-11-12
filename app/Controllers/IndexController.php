@@ -20,8 +20,12 @@ class IndexController
   protected function accountIndex()
   {
     $profile = Profiles::i()->fetchMyProfile();
-    $friends = Profiles::i()->fetchFriendsListSlice();
+    $friendsSlice = Profiles::i()->fetchFriendsListSlice();
 
-    echo view_html('pages/account/index', compact('profile', 'friends'));
+    echo view_html('pages/account/index', [
+      'profile' => $profile,
+      'friends_count' => $friendsSlice['count'],
+      'friends' => $friendsSlice['items'],
+    ]);
   }
 }

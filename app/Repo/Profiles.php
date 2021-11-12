@@ -20,7 +20,10 @@ class Profiles
   }
 
   /**
-   * @return ProfileData[]
+   * @return array
+   * [
+   ** count: int, items: array
+   * ]
    */
   public function fetchFriendsListSlice(): array
   {

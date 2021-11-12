@@ -11,6 +11,8 @@ use App\Foundation\AbstractModel;
  * @property bool $can_access_closed
  * @property bool $is_closed
  * @property ?string $photo_400_orig
+ * @property ?string $photo_50
+ * @property bool $online
  */
 class ProfileData extends AbstractModel
 {

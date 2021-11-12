@@ -6,6 +6,8 @@
  * @var \App\Models\ProfileData[] $friends
  */
 
+use App\Models\ProfileData;
+
 ?>
 <?= view_html('core/head', [
   'head_cb' => function () {
@@ -31,7 +33,23 @@
 
   <div class="account-index-friends-catalog">
 
-    <?php foreach ($friends as $friend): ?>
+    <?php
+    foreach ($friends as $friend):
+      $friend = new ProfileData($friend);
+      $displayName = $friend->displayName();
+      ?>
+
+      <div class="friend-tile">
+        <div class="friend-avatar-wrap">
+          <img
+            src="<?= $friend->photo_50 ?>"
+            alt="<?= sprintf('Аватар пользователя %s', $displayName) ?>"
+          >
+        </div>
+        <div class="friend-tile-main">
+          <div><span><?= $displayName ?></span> <small><?= $friend->online ? 'онлайн' : '' ?></small></div>
+        </div>
+      </div>
 
       <pre>
       <?= print_r($friend, 1) ?>
