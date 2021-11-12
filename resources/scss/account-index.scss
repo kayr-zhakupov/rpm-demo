@@ -1,9 +1,52 @@
+.account-index-page {
+  padding: 32px 0 0 64px;
+}
+
 .account-index-container {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  height: 100%;
+
+  > .account-index-profile {
+    flex: 0 0 200px;
+  }
+
+  > .account-index-friends-catalog {
+    flex: 1;
+    height: 100%;
+    padding-left: 32px;
+  }
+}
+
+.account-index-friends-catalog {
+
+  .friends-catalog-head {
+    height: 32px;
+  }
+
+  .friends-list-scrollable {
+    max-height: calc(100% - 32px);
+    overflow-y: scroll;
+    padding-bottom: 32px;
+    padding-right: 64px;
+  }
+}
+
+.friends-list-scrollable {
+  > * + * {
+    border-top: 1px solid gray;
+  }
 }
 
 .friend-tile {
   display: flex;
   flex-direction: row;
+  padding: 8px 16px 8px 0;
+
+  .friend-avatar-wrap {
+    width: 100px;
+    height: 100px;
+    margin-right: 16px;
+  }
 }

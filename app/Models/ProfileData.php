@@ -10,8 +10,9 @@ use App\Foundation\AbstractModel;
  * @property string $last_name
  * @property bool $can_access_closed
  * @property bool $is_closed
- * @property ?string $photo_400_orig
  * @property ?string $photo_50
+ * @property ?string $photo_100
+ * @property ?string $photo_200
  * @property bool $online
  */
 class ProfileData extends AbstractModel

@@ -15,7 +15,7 @@ class Profiles
   public function fetchMyProfile(): ProfileData
   {
     return VkApi::make()->fetchMyProfile([
-      'photo_400_orig',
+      'photo_200',
     ]);
   }
 
@@ -28,9 +28,9 @@ class Profiles
   public function fetchFriendsListSlice(): array
   {
     return VkApi::make()->fetchFriendsList([
-      'photo_50', 'online',
+      'photo_100', 'online',
     ], [
-      'count' => 4,
+      'count' => 100,
     ]);
   }
 }

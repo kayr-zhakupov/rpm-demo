@@ -3,7 +3,8 @@
  * @see \App\Controllers\IndexController::accountIndex()
  *
  * @var \App\Models\ProfileData $profile
- * @var \App\Models\ProfileData[] $friends
+ * @var int $friends_count
+ * @var array[] $friends
  */
 
 use App\Models\ProfileData;
@@ -16,14 +17,15 @@ use App\Models\ProfileData;
     <?php
   },
 ]) ?>
-<body>
+<body class="account-index-page">
 
 <div class="account-index-container">
+
   <div class="account-index-profile">
 
     <div>
       <img
-        src="<?= $profile->photo_400_orig ?>"
+        src="<?= $profile->photo_200 ?>"
         alt="Мой аватар"
       >
     </div>
@@ -33,29 +35,33 @@ use App\Models\ProfileData;
 
   <div class="account-index-friends-catalog">
 
-    <?php
-    foreach ($friends as $friend):
-      $friend = new ProfileData($friend);
-      $displayName = $friend->displayName();
-      ?>
+    <div class="friends-catalog-head">
+      <span>Все друзья</span> <i><?= $friends_count ?></i>
+    </div>
 
-      <div class="friend-tile">
-        <div class="friend-avatar-wrap">
-          <img
-            src="<?= $friend->photo_50 ?>"
-            alt="<?= sprintf('Аватар пользователя %s', $displayName) ?>"
-          >
+    <div class="friends-list-scrollable">
+
+      <?php
+      foreach ($friends as $friend):
+        $friend = new ProfileData($friend);
+        $displayName = $friend->displayName();
+        ?>
+
+        <div class="friend-tile">
+          <div class="friend-avatar-wrap">
+            <img
+              src="<?= $friend->photo_100 ?>"
+              alt="<?= sprintf('Аватар пользователя %s', $displayName) ?>"
+            >
+          </div>
+          <div class="friend-tile-main">
+            <div><span><?= $displayName ?></span> <small><?= $friend->online ? 'онлайн' : '' ?></small></div>
+          </div>
         </div>
-        <div class="friend-tile-main">
-          <div><span><?= $displayName ?></span> <small><?= $friend->online ? 'онлайн' : '' ?></small></div>
-        </div>
-      </div>
 
-      <pre>
-      <?= print_r($friend, 1) ?>
-      </pre>
+      <?php endforeach; ?>
 
-    <?php endforeach; ?>
+    </div>
 
   </div>
 </div>
