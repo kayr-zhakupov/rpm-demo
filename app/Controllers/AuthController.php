@@ -36,8 +36,8 @@ class AuthController
 
   protected function onReceivingCode(string $code)
   {
-//    $accessTokenResponse = (new VkAuth())->fetchAccessTokenResponse($code);
-    $accessTokenResponse = (new VkAuth())->_mock_fetchAccessTokenResponse_success($code);
+    $accessTokenResponse = (new VkAuth())->fetchAccessTokenResponse($code);
+//    $accessTokenResponse = (new VkAuth())->_mock_fetchAccessTokenResponse_success($code);
 
     $expiresInSeconds = (int) $accessTokenResponse->getNestedValue('expires_in');
 

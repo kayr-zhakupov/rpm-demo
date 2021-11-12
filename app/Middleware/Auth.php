@@ -39,4 +39,11 @@ class Auth
   {
     return VkAccessTokens::i()->findSession($sessionToken);
   }
+
+  public function getCurrentVkAccessToken(): ?string
+  {
+    if (!isset($this->currentSession) || ($this->currentSession === null)) return null;
+
+    return $this->currentSession->vk_token;
+  }
 }

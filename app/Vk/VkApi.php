@@ -3,23 +3,30 @@
 namespace App\Vk;
 
 use App\Foundation\Fetch;
+use App\Middleware\Auth;
+use App\Models\ProfileData;
 
 class VkApi
 {
+  protected ?string $accessToken;
+
+  public function __construct()
+  {
+    $this->accessToken = Auth::i()->getCurrentVkAccessToken();
+  }
+
   public function endpoint(string $method, array $params = []): string
   {
-    $accessToken = $_GET['code'] ?? '';
-
     return 'https://api.vk.com/method/' . $method . '?' . http_build_query(array_merge([
-        'access_token' => $accessToken,
+        'access_token' => $this->accessToken,
         'v' => '5.131',
       ], $params));
   }
 
-  public function fetchMethod(string $method)
+  public function fetchMethod(string $method, array $params = [])
   {
     return (new Fetch(
-      $this->endpoint($method)
+      $this->endpoint($method, $params)
     ))
       ->request();
   }
@@ -35,5 +42,21 @@ class VkApi
     $response->okOrThrow();
 
     dd($response);
+  }
+
+  /**
+   * @param array|string $fields
+   */
+  public function fetchMyProfile($fields = ''): ProfileData
+  {
+    if (is_array($fields)) $fields = implode(',', $fields);
+
+    $response = $this->fetchMethod('users.get', [
+      'fields' => $fields,
+    ]);
+
+    $response->okOrThrow();
+
+    return new ProfileData($response->getNestedValue('response.0'));
   }
 }
