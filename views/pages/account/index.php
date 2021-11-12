@@ -3,6 +3,7 @@
  * @see \App\Controllers\IndexController::accountIndex()
  *
  * @var \App\Models\ProfileData $profile
+ * @var \App\Models\ProfileData[] $friends
  */
 
 ?>
@@ -29,7 +30,15 @@
   </div>
 
   <div class="account-index-friends-catalog">
-FRIENDS
+
+    <?php foreach ($friends as $friend): ?>
+
+      <pre>
+      <?= print_r($friend, 1) ?>
+      </pre>
+
+    <?php endforeach; ?>
+
   </div>
 </div>
 

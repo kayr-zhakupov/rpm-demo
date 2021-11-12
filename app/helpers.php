@@ -78,6 +78,12 @@ function view_html(string $path, array $data = []): string
   return ob_get_clean();
 }
 
+/**
+ * @param $array
+ * @param $key
+ * @param mixed $default
+ * @return mixed
+ */
 function arr_get($array, $key, $default = null)
 {
   if ($key === null) return $array;

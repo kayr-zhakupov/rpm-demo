@@ -15,6 +15,11 @@ class VkApi
     $this->accessToken = Auth::i()->getCurrentVkAccessToken();
   }
 
+  public static function make(): VkApi
+  {
+    return new VkApiMock();
+  }
+
   public function endpoint(string $method, array $params = []): string
   {
     return 'https://api.vk.com/method/' . $method . '?' . http_build_query(array_merge([
@@ -33,18 +38,35 @@ class VkApi
 
   /**
    * @link https://vk.com/dev/friends.get
+   * @param array|string $fields
+   * @return mixed
+   * {
+   * count: int, items: array
+   * }
+   *
    * @throws \Exception
    */
-  public function fetchFriendsList()
+  public function fetchFriendsList($fields = '', array $params = []): array
   {
-    $response = $this->fetchMethod('friends.get');
-    dd($response);
+    if (is_array($fields)) $fields = implode(',', $fields);
+
+    /**
+     * Почему такая странная запись сложения массивов: поле fields задаётся только аргументом $fields и не может быть
+     * перезаписано; поле orders по умолчанию устанавливается в 'hints', но может быть переопределено.
+     */
+    $response = $this->fetchMethod('friends.get', [
+        'fields' => $fields,
+      ] + $params + [
+        'order' => 'hints',
+      ]);
+
     $response->okOrThrow();
 
-    dd($response);
+    return $response->getNestedValue('response');
   }
 
   /**
+   * @link https://vk.com/dev/users.get
    * @param array|string $fields
    */
   public function fetchMyProfile($fields = ''): ProfileData

@@ -42,6 +42,11 @@ class CurlResponse
     return $this->jsonBodyDecoded;
   }
 
+  /**
+   * @param string $path
+   * @param mixed $default
+   * @return mixed
+   */
   public function getNestedValue(string $path, $default = null)
   {
     return arr_get($this->getJsonDecoded(), $path, $default);
