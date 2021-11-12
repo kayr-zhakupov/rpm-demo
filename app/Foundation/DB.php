@@ -86,7 +86,7 @@ class DB
       return sprintf("%s = :%s", $column, $column);
     }, array_keys($values)));
 
-    return 'INSERT INTO "' . $table . '" SET ' . $setPartStr;
+    return 'INSERT INTO `' . $table . '` SET ' . $setPartStr;
   }
 
   public function mysqlDateTimeFormat(\DateTime $dt): string

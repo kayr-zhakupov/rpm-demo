@@ -32,4 +32,11 @@ class Router
     echo $response->renderBody();
     die();
   }
+
+  public function redirectAndDie(string $destination, int $status = 302)
+  {
+    http_response_code($status);
+    header("Location: " . $destination);
+    die();
+  }
 }

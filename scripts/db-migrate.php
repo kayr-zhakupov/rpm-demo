@@ -6,7 +6,7 @@ $sql = implode('', [
   "CREATE TABLE vk_access_tokens(",
   implode(', ', [
     "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
-    "app_token VARCHAR(64) NOT NULL",
+    "app_token VARCHAR(64) NOT NULL UNIQUE",
     "vk_token VARCHAR(128) NOT NULL",
     "user_id VARCHAR(16) NOT NULL",
     "ip_address VARCHAR(32) NOT NULL",

@@ -5,12 +5,15 @@ namespace App\Middleware;
 use App\Foundation\Concerns\IsSingleton;
 use App\Foundation\CookieUtils;
 use App\Models\VkAccessTokenRecord;
+use App\Repo\VkAccessTokens;
 
 class Auth
 {
   use IsSingleton;
 
   private static Auth $instance;
+
+  private ?VkAccessTokenRecord $currentSession;
 
   /**
    * @return bool
@@ -20,24 +23,20 @@ class Auth
   {
     $sessionToken = CookieUtils::get('app_session');
 
-    $this->testSessionToken($sessionToken);
-
-    return false;
+    return $this->authorizeAppToken($sessionToken);
   }
 
-  private function testSessionToken(string $sessionToken): bool
+  protected function authorizeAppToken($sessionToken)
   {
-    if (empty($sessionToken)) return false;
+    if (!isset($this->currentSession) || ($this->currentSession->app_token !== $sessionToken)) {
+      $this->currentSession = $this->retrieveSessionRecord($sessionToken);
+    }
 
-    $vkTokenRecord = $this->retrieveSessionRecord($sessionToken);
-
-    if (empty($vkTokenRecord)) return false;
-
-    dd(__METHOD__, 1, $sessionToken);
+    return ($this->currentSession !== null);
   }
 
   protected function retrieveSessionRecord(string $sessionToken): ?VkAccessTokenRecord
   {
-    return null;
+    return VkAccessTokens::i()->findSession($sessionToken);
   }
 }

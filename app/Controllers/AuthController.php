@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Foundation\CookieUtils;
+use App\Middleware\Auth;
 use App\Repo\VkAccessTokens;
 use App\Vk\VkAuth;
 
@@ -15,6 +16,10 @@ class AuthController
 
   public function acceptCode()
   {
+    if (Auth::i()->doPassMiddleware()) {
+      app()->router()->redirectAndDie(app()->appUrl());
+    }
+
     $code = $_GET['code'] ?? null;
 
     if (!empty($code)) {
@@ -26,8 +31,7 @@ class AuthController
       dd($_GET);
     }
 
-    header("Location: " . app()->appUrl('authorize'));
-    die();
+    app()->router()->redirectAndDie(app()->appUrl('authorize'));
   }
 
   protected function onReceivingCode(string $code)
@@ -38,6 +42,7 @@ class AuthController
     $expiresInSeconds = (int) $accessTokenResponse->getNestedValue('expires_in');
 
     $appToken = random_alnum(64);
+
     $db = app()->db();
     $createdAt = new \DateTime();
     $expiresAt = (new \DateTime())->add(new \DateInterval('PT' . $expiresInSeconds . 'S'));
@@ -57,6 +62,6 @@ class AuthController
       time() + $expiresInSeconds,
     );
 
-    dd('yeah');
+    app()->router()->redirectAndDie(app()->appUrl());
   }
 }
