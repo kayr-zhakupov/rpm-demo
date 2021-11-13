@@ -46,7 +46,7 @@
 
     <div
       class="friends-list-scrollable js-infinite-scroll"
-      data-offset="<?= count($friends) ?>"
+      data-count="<?= count($friends) ?>"
       data-has-full-list="<?= $has_full_friends_list ?>"
     >
 

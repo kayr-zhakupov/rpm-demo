@@ -22,7 +22,8 @@ class AjaxController
 
     return [
       'html' => $html,
-      'is_last_slice' => (count($sliceItems) < $count)
+      'count_real' => ($realCount = count($sliceItems)),
+      'is_last_slice' => ($realCount < $count),
     ];
   }
 }

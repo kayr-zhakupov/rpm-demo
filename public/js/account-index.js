@@ -20,26 +20,28 @@ class LazyScrollComponent {
     this._el = el
     this._hasFullList = !!this._el.dataset.hasFullList
 
-    this._attachListener()
-    this._refreshList()
+    this._attachScrollListener()
+    this._refreshListState()
   }
 
-  _refreshList() {
+  _refreshListState() {
     const offsetY = this._el.scrollTop
     const offsetYMax = this._el.scrollHeight - this._el.clientHeight
 
     if (offsetYMax - offsetY <= window.App.infinite_scroll_threshold) {
-      this._loadMore(this._el)
+      (!this._isLoadingMore) && this._loadMore(this._el)
+    }
+
+    if (this._hasFullList) {
+      this._onFullListLoad()
     }
   }
 
-  _attachListener() {
-    const listener = e => {
-      console.log('onscroll')
+  _attachScrollListener() {
+    const listener = () => {
       if (this._isLoadingMore) return
 
-      const tg = e.target
-      this._refreshList(tg)
+      this._refreshListState()
     }
 
     this._el.addEventListener('scroll', listener)
@@ -85,7 +87,7 @@ class LazyScrollComponent {
     const elAppendBefore = el.querySelector('.js-load-more-before')
 
     const count = (+window.App.friends_slice_count_next)
-    const offset = (+el.dataset.offset) || 0
+    const offset = (+el.dataset.count) || 0
 
     this._fetchFriendsSlice(count, offset)
       .then(response => {
@@ -102,10 +104,11 @@ class LazyScrollComponent {
           el.insertAdjacentHTML('beforeend', html)
         }
 
-        el.dataset.offset = offset + count
+        el.dataset.count = offset + (+response.count_real)
 
         if (response.is_last_slice) {
-          this._onFullListLoad()
+          this._hasFullList = true
+          this._refreshListState()
         }
 
         onEnd(true)
