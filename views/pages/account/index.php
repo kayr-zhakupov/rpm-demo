@@ -15,6 +15,9 @@ use App\Models\ProfileData;
     ?>
     <link href="<?= app()->styleUrl('gen/account-index.css?v=0.0.1') ?>" rel="stylesheet"/>
     <script src="<?= app()->scriptUrl('account-index.js') ?>"></script>
+    <script>window.App = <?= json_encode([
+        'infiniteScrollThreshold' => config('load_more_offset'),
+      ]) ?></script>
     <?php
   },
 ]) ?>
@@ -61,6 +64,10 @@ use App\Models\ProfileData;
         </div>
 
       <?php endforeach; ?>
+
+      <div class="__load-more js-load-more-before" style="height: <?= config('load_more_offset') ?>px">
+        <div class="progress-bar"></div>
+      </div>
 
     </div>
 

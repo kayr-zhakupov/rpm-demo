@@ -31,6 +31,7 @@ class Application
     $this->config = [
       'friends_slice_count_initial' => 10,
       'friends_slice_count_next' => 2,
+      'load_more_offset' => 128,
     ];
     //
     $this->router = new Router();
