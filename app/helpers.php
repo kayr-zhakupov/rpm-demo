@@ -7,9 +7,9 @@ function app(): Application
   return Application::i();
 }
 
-function env()
+function config(?string $key = null, $default = null)
 {
-  return Application::i()->env();
+  return Application::i()->config($key, $default);
 }
 
 /**

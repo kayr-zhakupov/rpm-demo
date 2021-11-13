@@ -39,9 +39,13 @@ class VkApi
   /**
    * @link https://vk.com/dev/friends.get
    * @param array|string $fields
+   * @param array $params
+   * [
+   ** order: ?string, count: ?int, offset: ?int
+   * ]
    * @return array
    * [
-   ** count: int, items: array
+   ** count: int, items: array,
    * ]
    */
   public function fetchFriendsList($fields = '', array $params = []): array

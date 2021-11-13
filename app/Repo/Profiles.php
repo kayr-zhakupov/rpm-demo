@@ -25,12 +25,13 @@ class Profiles
    ** count: int, items: array
    * ]
    */
-  public function fetchFriendsListSlice(): array
+  public function fetchFriendsListSlice(?int $count = null, int $offset = 0): array
   {
     return VkApi::make()->fetchFriendsList([
       'photo_100', 'online',
     ], [
-      'count' => 100,
+      'count' => $count,
+      'offset' => $offset,
     ]);
   }
 }
