@@ -6,7 +6,7 @@ class Router
 {
   public function runController($controller): AppResponse
   {
-    $response = new AppResponse(404);
+    $response = new AppResponse(404, '404 | Not Found');
 
     if ($controller === null) return $response;
 
@@ -17,10 +17,12 @@ class Router
 
     } catch (\Throwable $e) {
       error_log($e);
-      return $response
+      $response
         ->setStatus(500)
         ->setBody('500 | Server Error');
     }
+
+    $response->sendContentType();
 
     return $response;
   }

@@ -61,4 +61,20 @@ class AppResponse
 
     return '';
   }
+
+  protected function detectContentType(): string
+  {
+    if (is_array($this->body)) {
+      return 'application/json';
+    }
+
+    return 'text/plain';
+  }
+
+  public function sendContentType()
+  {
+    header(sprintf(
+      'Content-Type: %s; charset=utf-8', $this->detectContentType()
+    ), true);
+  }
 }

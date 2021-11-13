@@ -4,6 +4,7 @@
  * Загрузка приложения
  */
 
+use App\Controllers\AjaxController;
 use App\Controllers\AuthController;
 use App\Controllers\IndexController;
 
@@ -28,6 +29,9 @@ $controller = call_user_func(function () {
   $method = strtolower($_SERVER['REQUEST_METHOD']);
 
   switch ($requestUriNoArgs) {
+    case 'ajax/friends':
+      // приём кода авторизации со стороны ВК
+      return [new AjaxController(), 'friends'];
     case 'authorize/vk':
       // приём кода авторизации со стороны ВК
       return [new AuthController(), 'acceptCode'];
