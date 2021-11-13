@@ -14,6 +14,7 @@ use App\Models\ProfileData;
   'head_cb' => function () {
     ?>
     <link href="<?= app()->styleUrl('gen/account-index.css?v=0.0.1') ?>" rel="stylesheet"/>
+    <script src="<?= app()->scriptUrl('account-index.js') ?>"></script>
     <?php
   },
 ]) ?>
@@ -39,7 +40,7 @@ use App\Models\ProfileData;
       <span>Все друзья</span> <i><?= $friends_count ?></i>
     </div>
 
-    <div class="friends-list-scrollable">
+    <div class="friends-list-scrollable js-infinite-scroll">
 
       <?php
       foreach ($friends as $friend):
