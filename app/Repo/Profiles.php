@@ -22,7 +22,9 @@ class Profiles
   /**
    * @return array
    * [
-   ** count: int, items: array
+   ** count: int,
+   * общее количество друзей
+   ** items: array,
    * ]
    */
   public function fetchFriendsListSlice(?int $count = null, int $offset = 0): array

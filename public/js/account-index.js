@@ -10,28 +10,43 @@ function after_dom(callback) {
   }
 }
 
-const InfiniteScrollHandler = {
-  _isLoadingMore: false,
+class LazyScrollComponent {
+  _el = undefined
+  _isLoadingMore = false
+  _hasFullList = false
+  _cbRemoveScrollListener = undefined
 
-  init() {
-    this.attachListenerTo(document.querySelector('.js-infinite-scroll'))
-  },
+  constructor(el) {
+    this._el = el
+    this._hasFullList = !!this._el.dataset.hasFullList
 
-  attachListenerTo(el) {
-    el.addEventListener('scroll', e => {
+    this._attachListener()
+    this._refreshList()
+  }
 
-      if (this._isLoadingMore) return;
+  _refreshList() {
+    const offsetY = this._el.scrollTop
+    const offsetYMax = this._el.scrollHeight - this._el.clientHeight
+
+    if (offsetYMax - offsetY <= window.App.infinite_scroll_threshold) {
+      this._loadMore(this._el)
+    }
+  }
+
+  _attachListener() {
+    const listener = e => {
+      console.log('onscroll')
+      if (this._isLoadingMore) return
 
       const tg = e.target
-      const offsetY = tg.scrollTop
-      const offsetYMax = tg.scrollHeight - tg.clientHeight
-      if (offsetYMax - offsetY <= window.App.infinite_scroll_threshold) {
-        this.loadMore(tg, () => {
-          this._isLoadingMore = false
-        })
-      }
-    })
-  },
+      this._refreshList(tg)
+    }
+
+    this._el.addEventListener('scroll', listener)
+    this._cbRemoveScrollListener = () => {
+      this._el.removeEventListener('scroll', listener)
+    }
+  }
 
   _fetchFriendsSlice(count, offset) {
     const url = new URL(window.App.ajax_get_friends_slice_url)
@@ -50,13 +65,27 @@ const InfiniteScrollHandler = {
 
         return undefined
       })
-  },
+  }
 
-  loadMore(el, onEnd) {
+  _onFullListLoad() {
+    if (this._cbRemoveScrollListener) {
+      this._cbRemoveScrollListener()
+      this._cbRemoveScrollListener = undefined
+    }
+
+    this._el.querySelector('.js-load-more').remove()
+  }
+
+  _loadMore(el) {
+    this._isLoadingMore = true
+    const onEnd = () => {
+      this._isLoadingMore = false
+    }
+
     const elAppendBefore = el.querySelector('.js-load-more-before')
 
-    const count = window.App.friends_slice_count_next
-    const offset = el.dataset.offset || 0
+    const count = (+window.App.friends_slice_count_next)
+    const offset = (+el.dataset.offset) || 0
 
     this._fetchFriendsSlice(count, offset)
       .then(response => {
@@ -65,25 +94,27 @@ const InfiniteScrollHandler = {
           return;
         }
 
-        console.log(response)
+        const html = response.html
+
+        if (elAppendBefore) {
+          elAppendBefore.insertAdjacentHTML('beforebegin', html)
+        } else {
+          el.insertAdjacentHTML('beforeend', html)
+        }
+
+        el.dataset.offset = offset + count
+
+        if (response.is_last_slice) {
+          this._onFullListLoad()
+        }
 
         onEnd(true)
       })
-
-    const html = "<div class='friend-tile'>X<br>Y<br>Z<br>A<br>B</div>".repeat(count)
-
-    if (elAppendBefore) {
-      elAppendBefore.insertAdjacentHTML('beforebegin', html)
-    } else {
-      el.insertAdjacentHTML('beforeend', html)
-    }
-
-    el.dataset.offset = offset + count
-
-    onEnd && onEnd()
   }
 }
 
 after_dom(() => {
-  InfiniteScrollHandler.init()
+  document.querySelectorAll('.js-infinite-scroll').forEach((el) => {
+    new LazyScrollComponent(el)
+  })
 });

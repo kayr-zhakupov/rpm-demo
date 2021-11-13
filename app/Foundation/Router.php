@@ -12,7 +12,11 @@ class Router
 
     try {
 
-      $response->setBody($controller());
+      ob_start();
+      $result = $controller();
+      $body = ob_get_clean();
+
+      $response->setBody($result ?? $body);
       $response->setStatus(200);
 
     } catch (\Throwable $e) {

@@ -68,7 +68,7 @@ class AppResponse
       return 'application/json';
     }
 
-    return 'text/plain';
+    return 'text/html';
   }
 
   public function sendContentType()

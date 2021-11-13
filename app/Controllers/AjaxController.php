@@ -12,15 +12,17 @@ class AjaxController
     $offset = $_GET['offset'] ?? 0;
 
     $slice = Profiles::i()->fetchFriendsListSlice($count, $offset);
+    $sliceItems = $slice['items'];
 
     $html = implode('', array_map(function (array $profileData) {
       return view_html('pages/account/friend-tile', [
         'profile' => $profileData,
       ]);
-    }, $slice['items']));
+    }, $sliceItems));
 
     return [
       'html' => $html,
+      'is_last_slice' => (count($sliceItems) < $count)
     ];
   }
 }

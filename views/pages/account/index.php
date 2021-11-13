@@ -8,8 +8,6 @@
  * @var bool $has_full_friends_list
  */
 
-use App\Models\ProfileData;
-
 ?>
 <?= view_html('core/head', [
   'head_cb' => function () {
@@ -48,7 +46,7 @@ use App\Models\ProfileData;
 
     <div
       class="friends-list-scrollable js-infinite-scroll"
-      data-offset="<?= strlen($friends) ?>"
+      data-offset="<?= count($friends) ?>"
       data-has-full-list="<?= $has_full_friends_list ?>"
     >
 
@@ -59,6 +57,10 @@ use App\Models\ProfileData;
         ]);
       endforeach;
       ?>
+
+      <div class="__load-more js-load-more js-load-more-before" style="height: <?= config('load_more_offset') ?>px">
+        <div class="progress-bar"></div>
+      </div>
 
     </div>
 

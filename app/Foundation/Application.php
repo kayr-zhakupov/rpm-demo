@@ -3,8 +3,6 @@
 namespace App\Foundation;
 
 use App\Foundation\Concerns\IsSingleton;
-use PDO;
-use Throwable;
 
 /**
  * Синглтон движка.
@@ -30,7 +28,7 @@ class Application
     $this->env = require APP_BASE_PATH . '/env/env.php';
     $this->config = [
       'friends_slice_count_initial' => 10,
-      'friends_slice_count_next' => 2,
+      'friends_slice_count_next' => 5,
       'load_more_offset' => 128,
     ];
     //
