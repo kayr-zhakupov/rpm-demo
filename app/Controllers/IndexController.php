@@ -20,14 +20,18 @@ class IndexController
   protected function accountIndex()
   {
     $profile = Profiles::i()->fetchMyProfile();
-    $friendsSlice = Profiles::i()->fetchFriendsListSlice(
-      config('friends_slice_count_initial')
-    );
+    $sliceCountInitial = config('friends_slice_count_initial');
+    $friendsSlice = Profiles::i()->fetchFriendsListSlice($sliceCountInitial);
+    $friendsSliceItems = $friendsSlice['items'];
 
     echo view_html('pages/account/index', [
       'profile' => $profile,
       'friends_count' => $friendsSlice['count'],
-      'friends' => $friendsSlice['items'],
+      'friends' => $friendsSliceItems,
+      /**
+       * Если количество полученных друзей меньше требуемой величины - подгрузку можно изначально отключить.
+       */
+      'has_full_friends_list' => (count($friendsSliceItems) < $sliceCountInitial),
     ]);
   }
 }
