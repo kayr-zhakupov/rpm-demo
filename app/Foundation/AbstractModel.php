@@ -8,6 +8,10 @@ class AbstractModel
 
   public function __construct($input)
   {
+    if ($input instanceof AbstractModel) {
+      $input = $input->get();
+    }
+
     $this->attributes = (array) $input;
   }
 

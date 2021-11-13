@@ -54,24 +54,11 @@ use App\Models\ProfileData;
 
       <?php
       foreach ($friends as $friend):
-        $friend = new ProfileData($friend);
-        $displayName = $friend->displayName();
-        ?>
-
-        <div class="friend-tile">
-          <div class="friend-avatar-wrap">
-            <img
-              src="<?= $friend->photo_100 ?>"
-              alt="<?= sprintf('Аватар пользователя %s', $displayName) ?>"
-            >
-          </div>
-          <div class="friend-tile-main">
-            <div><span><?= $displayName ?></span> <small><?= $friend->online ? 'онлайн' : '' ?></small></div>
-          </div>
-        </div>
-
-      <?php endforeach; ?>
-
+        echo view_html('pages/account/friend-tile', [
+          'profile' => $friend,
+        ]);
+      endforeach;
+      ?>
 
     </div>
 

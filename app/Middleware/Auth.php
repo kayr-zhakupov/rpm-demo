@@ -15,23 +15,27 @@ class Auth
 
   private ?VkAccessTokenRecord $currentSession;
 
+  public function retrievePersistedSessionToken()
+  {
+    return CookieUtils::get('app_session');
+  }
+
+  public function ensureCurrentSession(): ?VkAccessTokenRecord
+  {
+    if (!isset($this->currentSession)) {
+      $this->currentSession = $this->retrieveSessionRecord($this->retrievePersistedSessionToken());
+    }
+
+    return $this->currentSession;
+  }
+
   /**
    * @return bool
    * true, если посетитель авторизован и токен активен; false otherwise
    */
   public function doPassMiddleware(): bool
   {
-    $sessionToken = CookieUtils::get('app_session');
-
-    return $this->authorizeAppToken($sessionToken);
-  }
-
-  protected function authorizeAppToken($sessionToken)
-  {
-    if (!isset($this->currentSession) || ($this->currentSession->app_token !== $sessionToken)) {
-      $this->currentSession = $this->retrieveSessionRecord($sessionToken);
-    }
-
+    $this->ensureCurrentSession();
     return ($this->currentSession !== null);
   }
 
@@ -42,7 +46,9 @@ class Auth
 
   public function getCurrentVkAccessToken(): ?string
   {
-    if (!isset($this->currentSession) || ($this->currentSession === null)) return null;
+    $this->ensureCurrentSession();
+
+    if ($this->currentSession === null) return null;
 
     return $this->currentSession->vk_token;
   }

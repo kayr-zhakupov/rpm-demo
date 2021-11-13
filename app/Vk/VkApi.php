@@ -2,6 +2,7 @@
 
 namespace App\Vk;
 
+use App\Foundation\CurlResponse;
 use App\Foundation\Fetch;
 use App\Middleware\Auth;
 use App\Models\ProfileData;
@@ -28,12 +29,18 @@ class VkApi
       ], $params));
   }
 
-  public function fetchMethod(string $method, array $params = [])
+  public function fetchMethod(string $method, array $params = []): CurlResponse
   {
-    return (new Fetch(
+    $response = (new Fetch(
       $this->endpoint($method, $params)
     ))
       ->request();
+
+    if ($errorMessage = $response->getNestedValue('error.error_msg')) {
+      die($errorMessage);
+    }
+
+    return $response;
   }
 
   /**
