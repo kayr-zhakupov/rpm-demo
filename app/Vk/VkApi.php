@@ -74,20 +74,53 @@ class VkApi
     return $response->getNestedValue('response');
   }
 
+  public function fetchMutualFriendsIds($sourceId, $targetId, array $params = [])
+  {
+    $response = $this->fetchMethod('friends.getMutual', [
+        'source_uid' => $sourceId,
+        'target_uid' => $targetId,
+      ] + $params);
+
+    return $response->okOrThrow()->getNestedValue('response');
+  }
+
   /**
    * @link https://vk.com/dev/users.get
    * @param array|string $fields
    */
   public function fetchMyProfile($fields = ''): ProfileData
   {
+    return $this->fetchSingleProfile(null, $fields);
+  }
+
+  /**
+   * @link https://vk.com/dev/users.get
+   * @param array|string $fields
+   */
+  public function fetchSingleProfile($id, $fields = ''): ProfileData
+  {
+    $profiles = $this->fetchProfiles([$id], $fields);
+
+    if (empty($profiles)) throw new \Exception("Пользователь не найден");
+
+    return new ProfileData($profiles[0]);
+  }
+
+  /**
+   * @param array $ids
+   * @param string $fields
+   * @return array[]
+   * @throws \Exception
+   */
+  public function fetchProfiles(array $ids, $fields = ''): array
+  {
     if (is_array($fields)) $fields = implode(',', $fields);
 
     $response = $this->fetchMethod('users.get', [
+      'user_ids' => $ids,
       'fields' => $fields,
     ]);
 
-    $response->okOrThrow();
-
-    return new ProfileData($response->getNestedValue('response.0'));
+    return $response->okOrThrow()->getNestedValue('response');
   }
 }

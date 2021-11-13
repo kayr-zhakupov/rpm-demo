@@ -27,10 +27,6 @@ class AuthController
       return;
     }
 
-    if (!empty($_GET)) {
-      dd($_GET);
-    }
-
     app()->router()->redirectAndDie(app()->appUrl('authorize'));
   }
 

@@ -43,6 +43,12 @@ $controller = call_user_func(function () {
       return ($method === 'get') ? new IndexController() : null;
   }
 
+  // проверка по wildcards
+  $urlParts = explode('/', $requestUriNoArgs);
+  if (($urlParts[0] ?? null) === 'u') {
+    return [new IndexController(), 'userProfile', $urlParts[1] ?? null];
+  }
+
   return null;
 });
 

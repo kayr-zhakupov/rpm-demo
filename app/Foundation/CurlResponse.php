@@ -22,9 +22,13 @@ class CurlResponse
     return ($this->status === 200);
   }
 
-  public function okOrThrow(): bool
+  /**
+   * @return static
+   * @throws \Exception
+   */
+  public function okOrThrow()
   {
-    if ($this->isOk()) return true;
+    if ($this->isOk()) return $this;
 
     throw new \Exception('Response status ' . $this->status);
   }

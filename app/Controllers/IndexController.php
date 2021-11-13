@@ -17,7 +17,7 @@ class IndexController
     app()->router()->runControllerAndDie([new AuthController(), 'index']);
   }
 
-  protected function accountIndex()
+  public function accountIndex()
   {
     $profile = Profiles::i()->fetchMyProfile();
     $sliceCountInitial = config('friends_slice_count_initial');
@@ -32,6 +32,21 @@ class IndexController
        * Если количество полученных друзей меньше требуемой величины - подгрузку можно изначально отключить.
        */
       'has_full_friends_list' => (count($friendsSliceItems) < $sliceCountInitial),
+    ]);
+  }
+
+  public function userProfile($id)
+  {
+    $profile = Profiles::i()->fetchProfileById($id);
+    $sliceCountInitial = config('friends_slice_count_initial');
+    $mutualFriendsSlice = Profiles::i()->fetchMutualFriendsListSlice(null, $id, $sliceCountInitial);
+    $mutualFriendsSliceItems = $mutualFriendsSlice['items'];
+
+    echo view_html('pages/account/index', [
+      'profile' => $profile,
+      'friends_count' => $mutualFriendsSlice['count'],
+      'friends' => $mutualFriendsSliceItems,
+      'has_full_friends_list' => (count($mutualFriendsSliceItems) < $sliceCountInitial),
     ]);
   }
 }

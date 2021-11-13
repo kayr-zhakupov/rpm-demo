@@ -48,11 +48,28 @@
   display: flex;
   flex-direction: row;
   padding: .5rem 1rem .5rem 0;
+  position: relative; // has stretched link
 
   .friend-avatar-wrap {
     width: 100px;
     height: 100px;
     margin-right: 1rem;
+  }
+
+  .__online-badge {
+    color: #198754;
+  }
+
+  .__stretched-link {
+    &::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      content: "";
+    }
   }
 }
 

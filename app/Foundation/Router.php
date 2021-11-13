@@ -10,10 +10,15 @@ class Router
 
     if ($controller === null) return $response;
 
+    $args = [];
+    if (is_array($controller)) {
+      $args = array_splice($controller, 2);
+    }
+
     try {
 
       ob_start();
-      $result = $controller();
+      $result = $controller(...$args);
       $body = ob_get_clean();
 
       $response->setBody($result ?? $body);

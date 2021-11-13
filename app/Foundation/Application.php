@@ -26,11 +26,7 @@ class Application
   public function __construct()
   {
     $this->env = require APP_BASE_PATH . '/env/env.php';
-    $this->config = [
-      'friends_slice_count_initial' => 10,
-      'friends_slice_count_next' => 10,
-      'load_more_offset' => 128,
-    ];
+    $this->config = require APP_BASE_PATH . '/config/config.php';
     //
     $this->router = new Router();
     $this->db = new DB($this->env['db']);
