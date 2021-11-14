@@ -1,6 +1,7 @@
 <?php
 
 use App\Foundation\Application;
+use App\Foundation\DB;
 
 function app(): Application
 {
@@ -10,6 +11,11 @@ function app(): Application
 function config(?string $key = null, $default = null)
 {
   return Application::i()->config($key, $default);
+}
+
+function db(): DB
+{
+  return app()->db();
 }
 
 /**

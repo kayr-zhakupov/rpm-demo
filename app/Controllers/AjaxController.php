@@ -35,16 +35,19 @@ class AjaxController
     $error = null;
 
     try {
-      $ownerId = Auth::i()->getCurrentVkAccessToken();
-
-      /*if (empty($ownerId))*/ throw new \Exception('Not authorized');
+      $ownerId = Auth::i()->getCurrentUserId();
+      if (empty($ownerId)) throw new \Exception('Not authorized');
 
       $action = $_POST['action'] ?? null;
+      $tagId = $_POST['id'] ?? null;
+      $targetId = $_POST['target_id'] ?? null;
 
       switch ($action) {
         case 'add':
           Tags::i()->insert([
-            'owner_id'
+            'owner_id' => $ownerId,
+            'tag_id' => $tagId,
+            'target_id' => $targetId,
           ]);
       }
 

@@ -52,4 +52,13 @@ class Auth
 
     return $this->currentSession->vk_token;
   }
+
+  public function getCurrentUserId(): ?string
+  {
+    $this->ensureCurrentSession();
+
+    if ($this->currentSession === null) return null;
+
+    return $this->currentSession->user_id;
+  }
 }
