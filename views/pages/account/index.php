@@ -2,11 +2,16 @@
 /**
  * @see \App\Controllers\IndexController::accountIndex()
  *
+ * @var \App\Models\VkAccessTokenRecord $session
  * @var \App\Models\ProfileData $profile
  * @var int $friends_count
  * @var array[] $friends
  * @var bool $has_full_friends_list
  */
+
+use App\Repo\Routes;
+
+$isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id));
 
 ?>
 <?= view_html('core/head', [
@@ -36,6 +41,13 @@
     </div>
 
     <div><?= $profile->displayName() ?></div>
+
+    <?php if (!$isMyAccount) : ?>
+
+      <hr>
+
+      <a href="<?= Routes::i()->my() ?>">Вернуться к Моему аккаунту</a>
+    <?php endif; ?>
   </div>
 
   <div class="account-index-friends-catalog">

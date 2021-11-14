@@ -14,4 +14,9 @@ class Routes
   {
     return app()->appUrl('u/' . $id);
   }
+
+  public function my()
+  {
+    return app()->appUrl();
+  }
 }

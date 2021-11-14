@@ -26,6 +26,7 @@ class IndexController
 
     echo view_html('pages/account/index', [
       'profile' => $profile,
+      'session' => Auth::i()->ensureCurrentSession(),
       'friends_count' => $friendsSlice['count'],
       'friends' => $friendsSliceItems,
       /**
@@ -44,6 +45,7 @@ class IndexController
 
     echo view_html('pages/account/index', [
       'profile' => $profile,
+      'session' => Auth::i()->ensureCurrentSession(),
       'friends_count' => $mutualFriendsSlice['count'],
       'friends' => $mutualFriendsSliceItems,
       'has_full_friends_list' => (count($mutualFriendsSliceItems) < $sliceCountInitial),

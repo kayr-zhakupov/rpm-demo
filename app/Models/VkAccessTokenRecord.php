@@ -10,6 +10,7 @@ namespace App\Models;
  * @property int $id
  * @property string $app_token
  * @property string $vk_token
+ * @property string $user_id
  * @property string $ip_address
  * @property string $expires_at
  * @property string $created_at

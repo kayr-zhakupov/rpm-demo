@@ -29,7 +29,7 @@ class LazyScrollComponent {
     const offsetYMax = this._el.scrollHeight - this._el.clientHeight
 
     if (offsetYMax - offsetY <= window.App.infinite_scroll_threshold) {
-      (!this._isLoadingMore) && this._loadMore(this._el)
+      (!this._isLoadingMore) && (!this._hasFullList) && this._loadMore(this._el)
     }
 
     if (this._hasFullList) {

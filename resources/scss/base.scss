@@ -10,4 +10,14 @@ html, body {
 
 body {
   font-family: sans-serif;
+  color: #212529;
+}
+
+hr {
+  margin: 1rem 0;
+  color: inherit;
+  background-color: currentColor;
+  border: 0;
+  opacity: 0.25;
+  height: 1px;
 }
