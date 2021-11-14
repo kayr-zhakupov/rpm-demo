@@ -27,3 +27,11 @@ function ajax_response_pipe(raw) {
   document.querySelector('.js-general-server-error').classList.add('--show')
   return undefined;
 }
+
+function fetch_post(url, data, params) {
+  return fetch(url,  Object.assign({
+    method: 'post',
+    body: build_form_query(data),
+    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+  }, params))
+}

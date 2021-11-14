@@ -12,19 +12,27 @@ use App\Repo\Routes;
 
 <div class="js-tags-widget">
 
-  <div class="tags-for-profile">
-    <?php foreach ($profile_tags as $tag): ?>
-      <div class="tag-for-profile-badge"><?= $tag->name ?></div>
-    <?php endforeach; ?>
-  </div>
-
-  <hr>
-
   <form
     class="js-tags-widget-form"
     action="<?= Routes::i()->ajaxTags() ?>"
     method="post"
   >
+
+    <div class="tags-for-profile">
+      <?php foreach ($profile_tags as $tag): ?>
+        <div class="tag-for-profile-badge">
+          <?= $tag->name ?>
+          <button
+            type="submit"
+            class="js-tag-to-user-delete-submit"
+            data-tag-id="<?= $tag->id ?>"
+          >[X]
+          </button>
+        </div>
+      <?php endforeach; ?>
+    </div>
+
+    <hr>
 
     <label for="tag-new-name">Имя нового тега</label>
     <input name="tag_new_name" id="tag-new-name">

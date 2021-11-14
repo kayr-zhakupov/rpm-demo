@@ -4,11 +4,13 @@
 const TagsWidgetMgmt = {
   _ajaxSubmitUrl: undefined,
   _targetUserId: undefined,
+  _widgetEl: undefined,
+  _isBusy: false,
 
   init() {
-
     this._ajaxSubmitUrl = window.App.ajax_tags_submit_url
     this._targetUserId = window.App.tags_target_user_id
+    this._resetWidgetElement()
 
     document.addEventListener('input', e => {
       const tg = e.target
@@ -22,8 +24,22 @@ const TagsWidgetMgmt = {
       if (tg.matches('.js-tag-insert-ajax-submit')) {
         e.preventDefault()
         this._insertTag(tg.closest('form'))
+        return
+      }
+      if (tg.matches('.js-tag-to-user-delete-submit')) {
+        e.preventDefault()
+        this._deleteTagToUser(tg.dataset.tagId)
       }
     })
+  },
+
+  _resetWidgetElement() {
+    this._widgetEl = document.querySelector('.js-tags-widget')
+  },
+
+  _refreshBusyState(flag) {
+    if (flag !== undefined) this._isBusy = flag
+    this._widgetEl.classList.toggle('--busy', flag)
   },
 
   _insertTag(form) {
@@ -34,30 +50,60 @@ const TagsWidgetMgmt = {
     }
 
     const url = this._ajaxSubmitUrl
-    return fetch(url, {
-      method: 'post',
-      body: build_form_query({
-        action: 'insert_tag',
-        name: name,
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+    return fetch_post(url, {
+      action: 'insert_tag',
+      name: name,
     })
       .then(ajax_response_pipe)
   },
 
   _insertTagToUser(tagId) {
     const url = this._ajaxSubmitUrl
-    return fetch(url, {
-      method: 'post',
-      body: build_form_query({
-        action: 'insert_tag_to_user',
-        id: tagId,
-        target_id: this._targetUserId,
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+    if (this._isBusy) return
+    this._refreshBusyState(true)
+    const onEnd = () => this._refreshBusyState(false)
+
+    return fetch_post(url, {
+      action: 'insert_tag_to_user',
+      id: tagId,
+      target_id: this._targetUserId,
     })
       .then(ajax_response_pipe)
-  }
+      .then(response => {
+        this._applyAjaxResponse(response, onEnd)
+      })
+  },
+
+  _deleteTagToUser(tagId) {
+    const url = this._ajaxSubmitUrl
+    if (this._isBusy) return
+    this._refreshBusyState(true)
+    const onEnd = () => this._refreshBusyState(false)
+
+    return fetch_post(url, {
+      action: 'delete_tag_to_user',
+      id: tagId,
+      target_id: this._targetUserId,
+    })
+      .then(ajax_response_pipe)
+      .then(response => {
+        this._applyAjaxResponse(response, onEnd)
+      })
+  },
+
+  _applyAjaxResponse(response, cbOnEnd) {
+    if (!response) {
+      cbOnEnd(false)
+      return
+    }
+
+    if (response.html_widget) {
+      this._widgetEl.outerHTML = response.html_widget
+      this._resetWidgetElement()
+    }
+
+    cbOnEnd(true)
+  },
 };
 
 after_dom(() => {

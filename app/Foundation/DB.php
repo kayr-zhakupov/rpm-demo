@@ -106,4 +106,11 @@ class DB
 
     return implode(',', $columnParts);
   }
+
+  public function executeStatementAndReturn(string $sql, array $bindings)
+  {
+    $statement = $this->statement($sql, $bindings);
+    $statement->execute();
+    return $statement;
+  }
 }

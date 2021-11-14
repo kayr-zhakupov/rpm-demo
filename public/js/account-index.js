@@ -140,9 +140,7 @@ class LazyScrollComponent {
   _loadMore() {
     console.log('_loadMore')
     this._refreshBusyState(true)
-    const onEnd = () => {
-      this._refreshBusyState(false)
-    }
+    const onEnd = () => this._refreshBusyState(false)
 
     this._fetchFriendsSlice()
       .then(response => {

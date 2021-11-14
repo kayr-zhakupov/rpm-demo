@@ -51,17 +51,17 @@ class AjaxController
     $result = [];
     $error = null;
     $successMessage = null;
+    $targetId = $_POST['target_id'] ?? null;
+    $tagId = $_POST['id'] ?? null;
 
     try {
       $ownerId = Auth::i()->getCurrentUserId();
       if (empty($ownerId)) throw new \Exception('Not authorized');
 
       $action = $_POST['action'] ?? null;
-      $targetId = $_POST['target_id'] ?? null;
 
       switch ($action) {
         case 'insert_tag_to_user':
-          $tagId = $_POST['id'] ?? null;
           Tags::i()->insertTagToUser([
             'tag_id' => $tagId,
             'target_id' => $targetId,
@@ -79,9 +79,15 @@ class AjaxController
           ]);
           $successMessage = sprintf("Тэг `%s` создан", $name);
           break;
+
+        case 'delete_tag_to_user':
+          Tags::i()->deleteTagToUser($tagId, $targetId);
+          $successMessage = "Тэг удалён";
+          break;
       }
 
     } catch (\Throwable $e) {
+      error_log($e);
       $error = $e->getMessage();
     }
 
@@ -93,6 +99,7 @@ class AjaxController
           'text' => $error,
         ]),
       ];
+      return $result;
     }
 
     if ($successMessage) {
@@ -103,6 +110,11 @@ class AjaxController
         ]),
       ];
     }
+
+    $result['html_widget'] = view_html('pages/account/tags-widget', [
+      'all_tags' => Tags::i()->getAllMyTags(),
+      'profile_tags' => Tags::i()->tagsForProfile($targetId),
+    ]);
 
     return $result;
   }

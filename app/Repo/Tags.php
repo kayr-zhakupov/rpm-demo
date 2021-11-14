@@ -61,6 +61,28 @@ class Tags
     return $statement->rowCount();
   }
 
+  public function deleteTagToUser($tagId, $targetId)
+  {
+    $sql = implode(' ', [
+      'DELETE tu',
+      'FROM tags_with_users tu',
+      'INNER JOIN tags t ON tu.tag_id = t.id',
+      'WHERE `t`.`owner_id` = :owner_id',
+      /**/ 'AND `t`.`id` = :tag_id',
+      /**/ 'AND `tu`.`target_id` = :target_id',
+    ]);
+
+    $bindings = [
+      'owner_id' => Auth::i()->getCurrentUserId(),
+      'tag_id' => $tagId,
+      'target_id' => $targetId,
+    ];
+
+    return app()->db()
+      ->executeStatementAndReturn($sql, $bindings)
+      ->rowCount();
+  }
+
   public function tagsForProfile($profileId)
   {
     return $this->tagsForProfiles([$profileId]);
@@ -89,7 +111,7 @@ class Tags
         'name' => 't.name',
         'target_id' => 'tu.target_id',
       ]),
-      'FROM tags t ',
+      'FROM tags t',
       'INNER JOIN tags_with_users tu ON t.id = tu.tag_id',
       'WHERE `t`.`owner_id` = :owner_id',
       /**/ 'AND `tu`.`target_id` IN (' . implode(',', $inPlaceholders) . ')',
