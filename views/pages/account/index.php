@@ -18,13 +18,18 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
   'head_cb' => function () {
     ?>
     <link href="<?= app()->styleUrl('gen/account-index.css?v=0.0.1') ?>" rel="stylesheet"/>
+
     <script src="<?= app()->scriptUrl('base.js') ?>"></script>
     <script src="<?= app()->scriptUrl('account-index.js') ?>"></script>
     <script src="<?= app()->scriptUrl('toasts.js') ?>"></script>
+    <script src="<?= app()->scriptUrl('tags.js') ?>"></script>
+
     <script>window.App = <?= json_encode([
         'infinite_scroll_threshold' => config('load_more_offset'),
         'ajax_get_friends_slice_url' => app()->appUrl('ajax/friends'),
         'friends_slice_count_next' => config('friends_slice_count_next'),
+        //
+        'ajax_tags_submit_url' => Routes::i()->tags(),
       ]) ?></script>
     <?php
   },
