@@ -43,7 +43,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
 
   <div class="account-index-profile">
 
-    <div>
+    <div class="profile-avatar-wrap">
       <img
         src="<?= $profile->photo_200 ?>"
         alt="Мой аватар"
@@ -53,9 +53,13 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
     <div><?= $profile->displayName() ?></div>
     <br>
 
-    <?php if (!$isMyAccount) : ?>
+    <?php if ($isMyAccount) : ?>
 
-      <?= view_html('pages/account/tags', compact('all_tags', 'profile_tags')) ?>
+      <?= view_html('pages/account/tags-filter', compact('all_tags')) ?>
+
+    <?php else: ?>
+
+      <?= view_html('pages/account/tags-widget', compact('all_tags', 'profile_tags')) ?>
 
       <hr>
 

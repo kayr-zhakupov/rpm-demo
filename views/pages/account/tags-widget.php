@@ -1,6 +1,6 @@
 <?php
 /**
- * @see views/pages/account/index.php:59
+ * @see views/pages/account/index.php:62
  *
  * @var \App\Models\TagRecord[] $all_tags
  * @var \App\Models\TagRecord[] $profile_tags
@@ -12,9 +12,9 @@ use App\Repo\Routes;
 
 <div class="js-tags-widget">
 
-  <div class="profile-tags">
+  <div class="tags-for-profile">
     <?php foreach ($profile_tags as $tag): ?>
-      <div class="profile-tag-badge"><?= $tag->name ?></div>
+      <div class="tag-for-profile-badge"><?= $tag->name ?></div>
     <?php endforeach; ?>
   </div>
 

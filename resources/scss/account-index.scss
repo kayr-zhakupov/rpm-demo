@@ -19,6 +19,13 @@
   }
 }
 
+.account-index-profile {
+  .profile-avatar-wrap {
+    width: 200px;
+    height: 200px;
+  }
+}
+
 .account-index-friends-catalog {
 
   .friends-catalog-head {
@@ -83,19 +90,53 @@
 }
 
 @keyframes progress-bar-stripes {
-  0% { background-position-x: 1rem; }
+  0% {
+    background-position-x: 1rem;
+  }
 }
 
-.profile-tags {
+.tags-for-profile {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin: -4px;
 }
 
-.profile-tag-badge {
+.tag-for-profile-badge {
   padding: 4px 8px;
   background-color: var(--color-primary);
   color: var(--color-fore-light);
   margin: 4px;
+}
+
+.tags-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  > * + * {
+    margin-top: 4px;
+  }
+}
+
+.tag-filter-badge {
+  display: flex;
+  flex-direction: row;
+
+  > .tag-filter-checkbox {
+    position: relative;
+    z-index: 1;
+    margin-left: 4px;
+  }
+
+  > .tag-filter-label {
+    padding: 4px 8px 4px 32px;
+    margin-left: -24px;
+  }
+}
+
+
+.tag-filter-checkbox:checked + .tag-filter-label {
+  background-color: var(--color-primary);
+  color: var(--color-fore-light);
 }
