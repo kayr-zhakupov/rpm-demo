@@ -60,4 +60,22 @@ class Tags
     ($statement = $db->statement($sql, $values))->execute();
     return $statement->rowCount();
   }
+
+  public function tagsForProfile($profileId)
+  {
+    $sql = implode(' ', [
+      'SELECT * FROM tags t ',
+      'JOIN tags_with_users tu ON t.id = tu.tag_id',
+      'WHERE `owner_id` = :owner_id',
+      /**/'AND `target_id` = :target_id',
+    ]);
+
+    $statement = app()->db()->statement($sql, [
+      'owner_id' => Auth::i()->getCurrentUserId(),
+      'target_id' => $profileId,
+    ]);
+    $statement->setFetchMode(\PDO::FETCH_CLASS, TagRecord::class);
+    $statement->execute();
+    return dd($statement->fetchAll());
+  }
 }

@@ -1,8 +1,9 @@
 <?php
 /**
- * @see views/pages/account/index.php:57
+ * @see views/pages/account/index.php:59
  *
- * @var array $all_tags
+ * @var \App\Models\TagRecord[] $all_tags
+ * @var \App\Models\TagRecord[] $profile_tags
  */
 
 use App\Repo\Routes;
@@ -21,12 +22,14 @@ use App\Repo\Routes;
   <button
     class="js-tags-ajax-submit"
     type="submit" name="tag_insert" value="tag_insert"
-  >Создать новый тег</button>
+  >Создать новый тег
+  </button>
 
   <button
     class="js-tags-ajax-submit"
     type="submit" name="tag_insert_and_add" value="tag_insert_and_add"
-  >Создать новый тег и назначить</button>
+  >Создать новый тег и назначить
+  </button>
 
   <hr>
 
@@ -35,8 +38,9 @@ use App\Repo\Routes;
     id="tag-choice" name="tag_choice"
     class="js-select-tag-choice"
   >
-    <?php foreach ($tagOptions as $tagOption): ?>
-      <option value="<?= $tagOption['id'] ?>"><?= $tagOption['name'] ?></option>
+    <option value="" selected></option>
+    <?php foreach ($all_tags as $tag): ?>
+      <option value="<?= $tag->id ?>"><?= $tag->name ?></option>
     <?php endforeach; ?>
   </select>
 

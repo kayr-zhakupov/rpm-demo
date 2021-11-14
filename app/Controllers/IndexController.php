@@ -37,6 +37,7 @@ class IndexController
       : Profiles::i()->fetchMutualFriendsListSlice(null, $id, $sliceCountInitial);
     $friendsSliceItems = $friendsSlice['items'];
     $allMyTags = Tags::i()->getAllMyTags();
+    $profileTags = $isMyAccount ? [] : Tags::i()->tagsForProfile($id);
 
     return view_html('pages/account/index', [
       'profile' => $profile,
@@ -45,6 +46,7 @@ class IndexController
       'friends' => $friendsSliceItems,
       'has_full_friends_list' => (count($friendsSliceItems) < $sliceCountInitial),
       'all_tags' => $allMyTags,
+      'profile_tags' => $profileTags,
     ]);
   }
 }

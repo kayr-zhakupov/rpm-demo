@@ -7,7 +7,8 @@
  * @var int $friends_count
  * @var array[] $friends
  * @var bool $has_full_friends_list
- * @var \App\Models\TagRecord[] all_tags
+ * @var \App\Models\TagRecord[] $all_tags
+ * @var \App\Models\TagRecord[] $profile_tags
  */
 
 use App\Repo\Routes;
@@ -55,7 +56,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
 
       <hr>
 
-      <?= view_html('pages/account/tags', compact('all_tags')) ?>
+      <?= view_html('pages/account/tags', compact('all_tags', 'profile_tags')) ?>
 
       <hr>
 
