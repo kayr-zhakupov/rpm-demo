@@ -11,8 +11,7 @@ class IndexController
   public function __invoke()
   {
     if (Auth::i()->doPassMiddleware()) {
-      $this->accountIndex();
-      return;
+      return $this->accountIndex();
     };
 
     app()->router()->runControllerAndDie([new AuthController(), 'index']);

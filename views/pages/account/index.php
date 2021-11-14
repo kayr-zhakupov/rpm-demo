@@ -1,6 +1,6 @@
 <?php
 /**
- * @see \App\Controllers\IndexController::accountIndex()
+ * @see \App\Controllers\IndexController::userProfile()
  *
  * @var \App\Models\VkAccessTokenRecord $session
  * @var \App\Models\ProfileData $profile
@@ -51,6 +51,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
     </div>
 
     <div><?= $profile->displayName() ?></div>
+    <br>
 
     <?php if (!$isMyAccount) : ?>
 
