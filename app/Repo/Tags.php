@@ -76,6 +76,6 @@ class Tags
     ]);
     $statement->setFetchMode(\PDO::FETCH_CLASS, TagRecord::class);
     $statement->execute();
-    return dd($statement->fetchAll());
+    return $statement->fetchAll();
   }
 }

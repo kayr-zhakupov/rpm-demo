@@ -85,3 +85,17 @@
 @keyframes progress-bar-stripes {
   0% { background-position-x: 1rem; }
 }
+
+.profile-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: -4px;
+}
+
+.profile-tag-badge {
+  padding: 4px 8px;
+  background-color: var(--color-primary);
+  color: var(--color-fore-light);
+  margin: 4px;
+}

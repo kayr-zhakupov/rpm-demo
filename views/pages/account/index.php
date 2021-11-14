@@ -54,8 +54,6 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
 
     <?php if (!$isMyAccount) : ?>
 
-      <hr>
-
       <?= view_html('pages/account/tags', compact('all_tags', 'profile_tags')) ?>
 
       <hr>

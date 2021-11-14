@@ -20,7 +20,11 @@ class AbstractModel
 
   public function toArray(): array
   {
-    dd(__METHOD__);
+    $result = [];
+    foreach ($this as $key => $value) {
+      $result[$key] = $value;
+    }
+    return $result;
   }
 
   public function get(?string $key = null, $default = null)
