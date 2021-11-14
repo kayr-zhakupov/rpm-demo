@@ -23,26 +23,24 @@ class AjaxController
     $slice = Profiles::i()->fetchFriendsOrTaggedProfilesListSlice($count, $offset, [
       'tags' => $tags,
     ]);
-    $sliceItems = $slice['items'];
 
-    $catalogView = new ProfilesCatalogView();
+    $catalogView = new ProfilesCatalogView($slice);
 
-    $html = view_html('pages/account/profiles-catalog', [
-      'title' => $catalogView->getTitle(),
-    ]);
+    $html_head = $catalogView->renderHead();
 
-//    $html = implode('', array_map(function (array $profileData) {
-//      return view_html('pages/account/friend-tile', [
-//        'profile' => $profileData,
-//      ]);
-//    }, $sliceItems));
+    $html_slice = implode('', array_map(function (array $profileData) {
+      return view_html('pages/account/friend-tile', [
+        'profile' => $profileData,
+      ]);
+    }, $catalogView->getItems()));
 
     return [
-        'html' => $html,
+        'html_slice' => $html_slice,
+        'html_head' => $html_head,
         'offset' => $offset,
-        'count_real' => ($realCount = count($sliceItems)),
+        'slice_length' => $catalogView->getCurrentCount(),
         'tags_str' => implode(',', $tags),
-        'is_last_slice' => ($realCount < $count),
+        'is_last_slice' => ($catalogView->getCurrentCount() < $count),
       ] + (
       $doIncludeSliceData ? [
         'slice' => $slice,

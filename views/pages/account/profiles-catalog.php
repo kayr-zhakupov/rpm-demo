@@ -6,11 +6,9 @@
  */
 ?>
 
-<div class="account-index-profiles-catalog js-profiles-catalog">
+<div class="account-index-profiles-catalog">
 
-  <div class="friends-catalog-head">
-    <span><?= $profiles_catalog_view->getTitle() ?></span> <i><?= $profiles_catalog_view->getTotalCount() ?></i>
-  </div>
+  <?= $profiles_catalog_view->renderHead() ?>
 
   <div
     class="friends-list-scrollable js-infinite-scroll"

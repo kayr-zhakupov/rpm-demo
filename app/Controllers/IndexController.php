@@ -35,7 +35,6 @@ class IndexController
     $profileSlice = $isMyAccount
       ? Profiles::i()->fetchFriendsOrTaggedProfilesListSlice($sliceCountInitial)
       : Profiles::i()->fetchMutualFriendsListSlice(null, $id, $sliceCountInitial);
-    $profilesSliceItems = $profileSlice['items'];
     $allMyTags = Tags::i()->getAllMyTags();
     $profileTags = $isMyAccount ? [] : Tags::i()->tagsForProfile($id);
 

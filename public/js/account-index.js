@@ -2,26 +2,29 @@
  * @var {{ infinite_scroll_threshold: number, }} App
  */
 /**
- * @typedef {{ html: string, }} TProfilesListResponse
+ * @typedef {{ html_slice: string, html_head: string, }} TProfilesListResponse
  */
 class LazyScrollComponent {
   _scrollableEl = undefined
   _isBusy = false
   _hasFullList = false
-  _cbRemoveScrollListener = undefined
 
   constructor(el) {
     this._scrollableEl = el
     this._hasFullList = !!this._scrollableEl.dataset.hasFullList
 
-    this._attachScrollListener()
+    this._initScrollListener()
     this._attachSearchFilterListener()
     this._refreshListState()
   }
 
   _refreshBusyState(flag) {
     if (flag !== undefined) this._isBusy = flag
-    this._scrollableEl.classList.toggle('--busy', this._isBusy)
+
+    const loadMoreEl = this._scrollableEl.querySelector('.js-load-more')
+    if (loadMoreEl) {
+      loadMoreEl.style.visibility = (!this._isBusy && this._hasFullList) ? 'collapse' : 'visible'
+    }
   }
 
   _refreshListState() {
@@ -32,14 +35,7 @@ class LazyScrollComponent {
       (!this._isBusy) && (!this._hasFullList) && this._loadMore()
     }
 
-    if (this._hasFullList) {
-      this._onFullListLoad()
-    }
-
-    const loadMoreEl = this._scrollableEl.querySelector('.js-load-more')
-    if (loadMoreEl) {
-      loadMoreEl.style.visibility = this._hasFullList ? 'collapse' : 'visible'
-    }
+    this._refreshBusyState()
   }
 
   _clearList() {
@@ -48,6 +44,7 @@ class LazyScrollComponent {
   }
 
   _reloadList() {
+    this._hasFullList = false
     this._refreshBusyState(true)
     const onEnd = () => {
       this._refreshBusyState(false)
@@ -71,15 +68,20 @@ class LazyScrollComponent {
       return
     }
 
-    if (response.html !== undefined) {
+    if (response.html_slice !== undefined) {
       const elAppendBefore = this._scrollableEl.querySelector('.js-load-more-before')
       if (elAppendBefore) {
-        elAppendBefore.insertAdjacentHTML('beforebegin', response.html)
+        elAppendBefore.insertAdjacentHTML('beforebegin', response.html_slice)
       } else {
-        this._scrollableEl.insertAdjacentHTML('beforeend', response.html)
+        this._scrollableEl.insertAdjacentHTML('beforeend', response.html_slice)
       }
 
-      this._scrollableEl.dataset.count = (+response.offset) + (+response.count_real)
+      this._scrollableEl.dataset.count = (+response.offset) + (+response.slice_length)
+    }
+
+    if (response.html_head !== undefined) {
+      document.querySelector('.js-profiles-catalog-head')
+        .outerHTML = response.html_head
     }
 
     if (response.is_last_slice) {
@@ -92,17 +94,12 @@ class LazyScrollComponent {
     cbOnEnd(true)
   }
 
-  _attachScrollListener() {
-    const listener = () => {
+  _initScrollListener() {
+    this._scrollableEl.addEventListener('scroll', () => {
+      if (this._hasFullList) return
       if (this._isBusy) return
-
       this._refreshListState()
-    }
-
-    this._scrollableEl.addEventListener('scroll', listener)
-    this._cbRemoveScrollListener = () => {
-      this._scrollableEl.removeEventListener('scroll', listener)
-    }
+    })
   }
 
   _attachSearchFilterListener() {
@@ -137,13 +134,6 @@ class LazyScrollComponent {
       method: 'get',
     })
       .then(ajax_response_pipe)
-  }
-
-  _onFullListLoad() {
-    if (this._cbRemoveScrollListener) {
-      this._cbRemoveScrollListener()
-      this._cbRemoveScrollListener = undefined
-    }
   }
 
   _loadMore() {
