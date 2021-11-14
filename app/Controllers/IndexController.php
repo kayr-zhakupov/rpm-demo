@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Middleware\Auth;
 use App\Repo\Profiles;
 use App\Repo\Tags;
+use App\Views\ProfilesCatalogView;
 
 class IndexController
 {
@@ -41,10 +42,7 @@ class IndexController
     return view_html('pages/account/index', [
       'profile' => $profile,
       'session' => Auth::i()->ensureCurrentSession(),
-      'title' => "Все друзья",
-      'total_count' => $profileSlice['count'],
-      'profiles_slice_items' => $profilesSliceItems,
-      'has_full_list' => (count($profilesSliceItems) < $sliceCountInitial),
+      'profiles_catalog_view' => new ProfilesCatalogView($profileSlice),
       'all_tags' => $allMyTags,
       'profile_tags' => $profileTags,
     ]);

@@ -2,27 +2,24 @@
 /**
  * @see views/pages/account/index.php:71
  *
- * @var string $title
- * @var int $total_count
- * @var array $profiles_slice_items
- * @var bool $has_full_list
+ * @var \App\Views\ProfilesCatalogView $profiles_catalog_view
  */
 ?>
 
 <div class="account-index-profiles-catalog js-profiles-catalog">
 
   <div class="friends-catalog-head">
-    <span>Все друзья</span> <i><?= $total_count ?></i>
+    <span><?= $profiles_catalog_view->getTitle() ?></span> <i><?= $profiles_catalog_view->getTotalCount() ?></i>
   </div>
 
   <div
     class="friends-list-scrollable js-infinite-scroll"
-    data-count="<?= count($profiles_slice_items) ?>"
-    data-has-full-list="<?= $has_full_list ?>"
+    data-count="<?= $profiles_catalog_view->getCurrentCount() ?>"
+    data-has-full-list="<?= $profiles_catalog_view->getCurrentCount() === $profiles_catalog_view->getTotalCount() ?>"
   >
 
     <?php
-    foreach ($profiles_slice_items as $profile):
+    foreach ($profiles_catalog_view->getItems() as $profile):
       echo view_html('pages/account/friend-tile', [
         'profile' => $profile,
       ]);

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Middleware\Auth;
 use App\Repo\Profiles;
 use App\Repo\Tags;
+use App\Views\ProfilesCatalogView;
 
 class AjaxController
 {
@@ -24,11 +25,17 @@ class AjaxController
     ]);
     $sliceItems = $slice['items'];
 
-    $html = implode('', array_map(function (array $profileData) {
-      return view_html('pages/account/friend-tile', [
-        'profile' => $profileData,
-      ]);
-    }, $sliceItems));
+    $catalogView = new ProfilesCatalogView();
+
+    $html = view_html('pages/account/profiles-catalog', [
+      'title' => $catalogView->getTitle(),
+    ]);
+
+//    $html = implode('', array_map(function (array $profileData) {
+//      return view_html('pages/account/friend-tile', [
+//        'profile' => $profileData,
+//      ]);
+//    }, $sliceItems));
 
     return [
         'html' => $html,

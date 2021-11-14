@@ -19,6 +19,11 @@ class LazyScrollComponent {
     this._refreshListState()
   }
 
+  _refreshBusyState(flag) {
+    if (flag !== undefined) this._isBusy = flag
+    this._scrollableEl.classList.toggle('--busy', this._isBusy)
+  }
+
   _refreshListState() {
     const offsetY = this._scrollableEl.scrollTop
     const offsetYMax = this._scrollableEl.scrollHeight - this._scrollableEl.clientHeight
@@ -43,9 +48,9 @@ class LazyScrollComponent {
   }
 
   _reloadList() {
-    this._isBusy = true
+    this._refreshBusyState(true)
     const onEnd = () => {
-      this._isBusy = false
+      this._refreshBusyState(false)
     }
     this._clearList()
 
@@ -143,9 +148,9 @@ class LazyScrollComponent {
 
   _loadMore() {
     console.log('_loadMore')
-    this._isBusy = true
+    this._refreshBusyState(true)
     const onEnd = () => {
-      this._isBusy = false
+      this._refreshBusyState(false)
     }
 
     this._fetchFriendsSlice()

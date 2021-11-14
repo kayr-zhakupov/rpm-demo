@@ -4,10 +4,7 @@
  *
  * @var \App\Models\VkAccessTokenRecord $session
  * @var \App\Models\ProfileData $profile
- * @var string $title
- * @var int $total_count
- * @var array[] $profiles_slice_items
- * @var bool $has_full_list
+ * @var \App\Views\ProfilesCatalogView $profiles_catalog_view
  * @var \App\Models\TagRecord[] $all_tags
  * @var \App\Models\TagRecord[] $profile_tags
  */
@@ -69,8 +66,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
   </div>
 
   <?php echo view_html(
-    'pages/account/profiles-catalog',
-    compact('title', 'total_count', 'profiles_slice_items', 'has_full_list')
+    'pages/account/profiles-catalog', compact('profiles_catalog_view')
   ); ?>
 </div>
 
