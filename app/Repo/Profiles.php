@@ -5,6 +5,7 @@ namespace App\Repo;
 use App\Foundation\Concerns\IsSingleton;
 use App\Middleware\Auth;
 use App\Models\ProfileData;
+use App\Profile\ProfilesSliceRequest;
 use App\Vk\VkApi;
 
 class Profiles
@@ -27,93 +28,72 @@ class Profiles
    * @return array
    * [
    ** count: int,
-   * общее количество позиций
-   ** items: array,
-   * ]
-   */
-  public function fetchFriendsOrTaggedProfilesListSlice(?int $count = null, int $offset = 0, array $params = []): array
-  {
-    $params = $params + [
-        'do_include_tags' => true,
-        'tags' => '',
-      ];
-
-    $tags = (function ($in) {
-      if (empty($in)) return [];
-
-      if (is_string($in)) {
-        $in = explode(',', $in);
-      }
-
-      return array_filter($in);
-    })($params['tags']);
-
-    if ($tags) {
-      $items = $this->fetchProfilesByTags($tags, $count, $offset, $params);
-      $slice = [
-        'count' => count($items),
-        'items' => $items,
-      ];
-    } else {
-      $slice = $this->fetchFriendsListSlice($count, $offset);
-    }
-
-    if ($params['do_include_tags']) {
-      $slice['items'] = $this->extendSliceItemsWithTags($slice['items']);
-    }
-
-    return $slice;
-  }
-
-  /**
-   * @return array
-   * [
-   ** count: int,
    * общее количество друзей
    ** items: array,
    * ]
    */
-  public function fetchFriendsListSlice(?int $count = null, int $offset = 0): array
+  public function fetchFriendsListSlice(ProfilesSliceRequest $request): array
   {
     return VkApi::make()->fetchFriendsList([
       'photo_100', 'online',
     ], [
-      'count' => $count,
-      'offset' => $offset,
+      'count' => $request->getRequestedCount(),
+      'offset' => $request->getOffset(),
     ]);
   }
 
   /**
-   * @param array $tags
-   * @param int|null $count
-   * @param int $offset
-   * @param array $params
-   * @return array[]
+   * @param ProfilesSliceRequest $request
+   * @return array
+   * [
+   ** count: int,
+   * общее количество
+   ** items: array,
+   * ]
    * @throws \Exception
    */
-  public function fetchProfilesByTags(array $tags, ?int $count = null, int $offset = 0, array $params = [])
+  public function fetchProfilesByTags(ProfilesSliceRequest $request)
   {
     $inPlaceholders = [];
     $inBindings = [];
-    $tags = array_unique($tags);
+    $tags = $request->getTags();
     foreach ($tags as $i => $profileId) {
       $placeholder = 'p' . $i;
       $inPlaceholders[] = ':' . $placeholder;
       $inBindings[$placeholder] = $profileId;
     }
 
-    $sql = implode(' ', [
+    $allBindings = [
+        'owner_id' => Auth::i()->getCurrentUserId(),
+        'tags_count' => count($tags),
+      ] + $inBindings;
 
-      'SELECT `tu`.`target_id` AS target_id',
+    $sqlCore = implode(' ', [
       'FROM tags_with_users tu',
       'INNER JOIN tags t ON tu.tag_id = t.id',
       'WHERE `t`.`owner_id` = :owner_id',
       /**/ 'AND `tu`.`tag_id` IN (' . implode(',', $inPlaceholders) . ')',
       'GROUP BY `tu`.`target_id`',
       'HAVING COUNT(DISTINCT `tu`.`tag_id`) >= :tags_count',
+    ]);
+
+    $sqlCount = implode(' ', [
+      'SELECT COUNT(*) AS total FROM (',
+      /**/'SELECT `tu`.`target_id`',
+      /**/$sqlCore,
+      ') total',
+    ]);
+
+    $countStatement = app()->db()->statement($sqlCount, $allBindings);
+    $countStatement->execute();
+    $totalCount = arr_get($countStatement->fetchAll(), '0.total');
+
+    $sql = implode(' ', [
+      'SELECT `tu`.`target_id` AS target_id',
+      $sqlCore,
       'ORDER BY MAX(`tu`.`id`) DESC',
-      'LIMIT ' . $count,
-      'OFFSET ' . $offset,
+      'LIMIT ' . $request->getRequestedCount(),
+      'OFFSET ' . $request->getOffset(),
     ]);
 
     $statement = app()->db()->statement($sql, [
@@ -123,11 +103,14 @@ class Profiles
     $statement->execute();
     $profileIds = arr_pluck($statement->fetchAll(), 'target_id');
 
-    return $profileIds
-      ? VkApi::make()->fetchProfiles($profileIds, [
-        'photo_100', 'online',
-      ])
-      : [];
+    return [
+      'items' => $profileIds
+        ? VkApi::make()->fetchProfiles($profileIds, [
+          'photo_100', 'online',
+        ])
+        : [],
+      'count' => $totalCount,
+    ];
   }
 
   /**
@@ -165,7 +148,7 @@ class Profiles
     ]);
   }
 
-  protected function extendSliceItemsWithTags($profileItems)
+  public function extendSliceItemsWithTags($profileItems)
   {
     $profilesGroupedById = arr_key_by($profileItems, 'id');
     $tagsForSlice = Tags::i()->tagsForProfiles(array_keys($profilesGroupedById));

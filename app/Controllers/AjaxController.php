@@ -3,32 +3,26 @@
 namespace App\Controllers;
 
 use App\Middleware\Auth;
-use App\Repo\Profiles;
+use App\Profile\ProfilesSliceRequest;
 use App\Repo\Tags;
 use App\Views\ProfilesCatalogView;
 
 class AjaxController
 {
-  public function friends()
+  public function profiles()
   {
-    $count = $_GET['count'] ?? null;
-    $offset = $_GET['offset'] ?? 0;
-    $tags = (function ($in) {
-      $_ = $in ?? '';
-      if (empty($_)) return [];
-      return array_filter(explode(',', $_));
-    })($_GET['tags']);
-    $doIncludeSliceData = array_key_exists('dbg', $_GET);
-
-    $slice = Profiles::i()->fetchFriendsOrTaggedProfilesListSlice($count, $offset, [
-      'tags' => $tags,
+    $profilesSliceRequest = new ProfilesSliceRequest([
+      'count' => $_GET['count'] ?? null,
+      'offset' => $_GET['offset'] ?? 0,
+      'tags' => $_GET['tags'],
+      'friends_of_id' => Auth::i()->getCurrentUserId(),
     ]);
-
-    $catalogView = new ProfilesCatalogView($slice);
+    $catalogView = new ProfilesCatalogView($profilesSliceRequest);
+    $doIncludeSliceData = array_key_exists('dbg', $_GET);
 
     $html_head = $catalogView->renderHead();
 
-    $html_slice = implode('', array_map(function (array $profileData) {
+    $html_slice = implode('', array_map(function ($profileData) {
       return view_html('pages/account/friend-tile', [
         'profile' => $profileData,
       ]);
@@ -37,13 +31,16 @@ class AjaxController
     return [
         'html_slice' => $html_slice,
         'html_head' => $html_head,
-        'offset' => $offset,
-        'slice_length' => $catalogView->getCurrentCount(),
-        'tags_str' => implode(',', $tags),
-        'is_last_slice' => ($catalogView->getCurrentCount() < $count),
+        'offset' => $profilesSliceRequest->getOffset(),
+        'slice_length' => $profilesSliceRequest->getItemsLength(),
+        'tags_str' => $profilesSliceRequest->tagsToString(),
+        'is_last_slice' => ($profilesSliceRequest->getItemsLength() < $profilesSliceRequest->getRequestedCount()),
       ] + (
       $doIncludeSliceData ? [
-        'slice' => $slice,
+        'slice' => [
+          'total_count' => $profilesSliceRequest->getTotalCount(),
+          'items' => $profilesSliceRequest->getItems(),
+        ],
       ] : []
       );
   }

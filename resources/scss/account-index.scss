@@ -32,7 +32,7 @@
     height: 2rem;
   }
 
-  .friends-list-scrollable {
+  .profiles-list-scrollable {
     max-height: calc(100% - 2rem);
     overflow-y: scroll;
     padding-bottom: 2rem;
@@ -40,7 +40,7 @@
   }
 }
 
-.friends-list-scrollable {
+.profiles-list-scrollable {
   > * + * {
     border-top: 1px solid gray;
   }

@@ -26,7 +26,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
 
     <script>window.App = <?= json_encode([
         'infinite_scroll_threshold' => config('load_more_offset'),
-        'ajax_get_friends_slice_url' => app()->appUrl('ajax/friends'),
+        'ajax_get_friends_slice_url' => Routes::i()->ajaxProfiles(),
         'friends_slice_count_next' => config('friends_slice_count_next'),
         //
         'ajax_tags_submit_url' => Routes::i()->ajaxTags(),

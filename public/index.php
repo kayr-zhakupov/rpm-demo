@@ -29,8 +29,8 @@ $controller = call_user_func(function () {
   $method = strtolower($_SERVER['REQUEST_METHOD']);
 
   switch ($requestUriNoArgs) {
-    case 'ajax/friends':
-      return [new AjaxController(), 'friends'];
+    case 'ajax/profiles':
+      return [new AjaxController(), 'profiles'];
     case 'ajax/tags':
       return [new AjaxController(), 'tags'];
     case 'authorize/vk':

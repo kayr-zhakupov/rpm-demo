@@ -29,4 +29,9 @@ class Routes
   {
     return app()->appUrl('authorize');
   }
+
+  public function ajaxProfiles()
+  {
+    return app()->appUrl('ajax/profiles');
+  }
 }

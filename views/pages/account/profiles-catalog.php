@@ -11,9 +11,11 @@
   <?= $profiles_catalog_view->renderHead() ?>
 
   <div
-    class="friends-list-scrollable js-infinite-scroll"
-    data-count="<?= $profiles_catalog_view->getCurrentCount() ?>"
-    data-has-full-list="<?= $profiles_catalog_view->getCurrentCount() === $profiles_catalog_view->getTotalCount() ?>"
+    class="profiles-list-scrollable js-infinite-scroll"
+    data-count="<?= $profiles_catalog_view->getRequest()->getItemsLength() ?>"
+    data-has-full-list="<?=
+    $profiles_catalog_view->getRequest()->getItemsLength() === $profiles_catalog_view->getRequest()->getTotalCount()
+    ?>"
   >
 
     <?php

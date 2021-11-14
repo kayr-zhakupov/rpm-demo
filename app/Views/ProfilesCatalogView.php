@@ -2,15 +2,15 @@
 
 namespace App\Views;
 
+use App\Profile\ProfilesSliceRequest;
+
 class ProfilesCatalogView
 {
-  protected int $totalCount;
-  protected array $items;
+  protected ProfilesSliceRequest $request;
 
-  public function __construct(array $slice)
+  public function __construct(ProfilesSliceRequest $request)
   {
-    $this->items = $slice['items'] ?? [];
-    $this->totalCount = $slice['count'] ?? $slice['total_count'] ?? count($this->items);
+    $this->request = $request;
   }
 
   public function getTitle(): string
@@ -18,20 +18,9 @@ class ProfilesCatalogView
     return 'Все друзья';
   }
 
-  /**
-   * @return int
-   */
-  public function getTotalCount()
+  public function getTotalCount(): int
   {
-    return $this->totalCount;
-  }
-
-  /**
-   * @return int
-   */
-  public function getCurrentCount()
-  {
-    return count($this->items);
+    return $this->request->getTotalCount();
   }
 
   /**
@@ -39,7 +28,7 @@ class ProfilesCatalogView
    */
   public function getItems()
   {
-    return $this->items;
+    return $this->request->getItems();
   }
 
   public function renderHead(): string
@@ -48,10 +37,32 @@ class ProfilesCatalogView
 
     ?>
     <div class="profiles-catalog-head js-profiles-catalog-head">
-      <span><?= $this->getTitle() ?></span> <i><?= $this->getTotalCount() ?></i>
+      <span><?= $this->getTitle() ?></span> <i><?= $this->request->getTotalCount() ?></i>
     </div>
     <?php
 
     return ob_get_clean();
+  }
+
+  /**
+   * @return int
+   */
+  public function getSliceCount(): int
+  {
+    return $this->sliceCount;
+  }
+
+  /**
+   * @param int $sliceCount
+   */
+  public function setSliceCount(int $sliceCount)
+  {
+    $this->sliceCount = $sliceCount;
+    return $this;
+  }
+
+  public function getRequest(): ProfilesSliceRequest
+  {
+    return $this->request;
   }
 }
