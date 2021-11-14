@@ -16,6 +16,7 @@ class AjaxController
       'offset' => $_GET['offset'] ?? 0,
       'tags' => $_GET['tags'],
       'friends_of_id' => Auth::i()->getCurrentUserId(),
+      'friends_with' => $_GET['friends_with'] ?? null,
     ]);
     $catalogView = new ProfilesCatalogView($profilesSliceRequest);
     $doIncludeSliceData = array_key_exists('dbg', $_GET);

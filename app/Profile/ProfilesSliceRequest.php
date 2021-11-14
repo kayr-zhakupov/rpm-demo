@@ -10,6 +10,7 @@ class ProfilesSliceRequest
   protected int $offset;
   protected array $tags;
   protected ?string $friendsOfId;
+  protected ?string $mutualFriendsWith;
   //
   protected int $total_count;
   protected array $items;
@@ -17,9 +18,10 @@ class ProfilesSliceRequest
   public function __construct(array $params)
   {
     $this->requestedCount = $params['count'] ?? 0;
-    $this->offset = $params['offset'] ?? 0;
+    $this->offset = (int) ($params['offset'] ?: 0);
     $this->setTags($params['tags'] ?? null);
     $this->friendsOfId = $params['friends_of_id'] ?? null;
+    $this->mutualFriendsWith = $params['friends_with'] ?? null;
   }
 
   protected function setTags($tags)
@@ -41,18 +43,21 @@ class ProfilesSliceRequest
   {
     if ($this->friendsOfId !== null) {
 
-      $sliceResponse = ($this->tags)
-        ? Profiles::i()->fetchProfilesByTags($this)
-        : Profiles::i()->fetchFriendsListSlice($this);
+      $sliceResponse = ($this->mutualFriendsWith !== null)
+        ? Profiles::i()->fetchMutualFriendsListSlice($this)
+        : (
+        ($this->tags)
+          ? Profiles::i()->fetchProfilesByTags($this)
+          : Profiles::i()->fetchFriendsListSlice($this)
+        );
 
       $this->total_count = $sliceResponse['count'];
       $this->items = Profiles::i()->extendSliceItemsWithTags($sliceResponse['items']);
       return;
     }
 
-    dd(__METHOD__, $this);
-
-    $profileSlice = Profiles::i()->fetchMutualFriendsListSlice(null, $id, $sliceCountInitial);
+    $this->total_count = 0;
+    $this->items = [];
   }
 
   protected function ensureItemsFetched()
@@ -114,5 +119,15 @@ class ProfilesSliceRequest
   public function getTags(): array
   {
     return $this->tags;
+  }
+
+  public function getFriendsOfId()
+  {
+    return $this->friendsOfId;
+  }
+
+  public function getMutualFriendsWith()
+  {
+    return $this->mutualFriendsWith;
   }
 }

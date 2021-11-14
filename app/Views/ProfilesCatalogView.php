@@ -18,11 +18,6 @@ class ProfilesCatalogView
     return 'Все друзья';
   }
 
-  public function getTotalCount(): int
-  {
-    return $this->request->getTotalCount();
-  }
-
   /**
    * @return array
    */
@@ -42,23 +37,6 @@ class ProfilesCatalogView
     <?php
 
     return ob_get_clean();
-  }
-
-  /**
-   * @return int
-   */
-  public function getSliceCount(): int
-  {
-    return $this->sliceCount;
-  }
-
-  /**
-   * @param int $sliceCount
-   */
-  public function setSliceCount(int $sliceCount)
-  {
-    $this->sliceCount = $sliceCount;
-    return $this;
   }
 
   public function getRequest(): ProfilesSliceRequest

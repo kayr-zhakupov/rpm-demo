@@ -129,6 +129,7 @@ class LazyScrollComponent {
     url.searchParams.append('count', count)
     url.searchParams.append('offset', offset)
     url.searchParams.append('tags', tagIds)
+    url.searchParams.append('friends_with', window.App.tags_target_user_id || '')
 
     return fetch(url, {
       method: 'get',

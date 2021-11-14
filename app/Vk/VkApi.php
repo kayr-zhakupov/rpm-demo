@@ -79,14 +79,27 @@ class VkApi
     return $response->getNestedValue('response');
   }
 
+  /**
+   * @param $sourceId
+   * @param $targetId
+   * @param array $params
+   * @return mixed
+   * @return array
+   * [
+   ** count: int, ids: array,
+   * ]
+   */
   public function fetchMutualFriendsIds($sourceId, $targetId, array $params = [])
   {
     $response = $this->fetchMethod('friends.getMutual', [
         'source_uid' => $sourceId,
-        'target_uid' => $targetId,
+        'target_uids' => [$targetId],
       ] + $params);
 
-    return $response->okOrThrow()->getNestedValue('response');
+    return [
+      'count' => $response->getNestedValue('response.0.common_count'),
+      'ids' => $response->getNestedValue('response.0.common_friends'),
+    ];
   }
 
   /**

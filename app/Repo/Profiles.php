@@ -121,18 +121,22 @@ class Profiles
    ** items: array,
    * ]
    */
-  public function fetchMutualFriendsListSlice($sourceId, $targetId, ?int $count = null, int $offset = 0)
+  public function fetchMutualFriendsListSlice(ProfilesSliceRequest $request)
   {
-    $ids = $this->vkApi()->fetchMutualFriendsIds($sourceId, $targetId);
+    ['count' => $count, 'ids' => $ids] = $this->vkApi()
+      ->fetchMutualFriendsIds(
+        $request->getFriendsOfId(), $request->getMutualFriendsWith(), [
+          'count' => $request->getRequestedCount(),
+          'offset' => $request->getOffset(),
+        ]
+      );
 
-    $slicedIds = array_splice($ids, $offset, $count);
-
-    $profiles = $this->vkApi()->fetchProfiles($slicedIds, [
+    $profiles = $this->vkApi()->fetchProfiles($ids, [
       'photo_100', 'online',
     ]);
 
     return [
-      'count' => count($ids),
+      'count' => $count,
       'items' => $profiles,
     ];
   }

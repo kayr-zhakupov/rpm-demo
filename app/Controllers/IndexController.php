@@ -24,17 +24,17 @@ class IndexController
     return $this->userProfile(Auth::i()->getCurrentUserId());
   }
 
-  /**
-   * @param string|int|null $id
-   */
-  public function userProfile($id)
+  public function userProfile(string $id)
   {
     $sliceCountInitial = config('friends_slice_count_initial');
+    $currentUserId = Auth::i()->getCurrentUserId();
+
     $profilesSliceRequest = new ProfilesSliceRequest([
       'count' => $sliceCountInitial,
       'offset' => 0,
       'tags' => [],
-      'friends_of_id' => $id,
+      'friends_of_id' => $currentUserId,
+      'friends_with' => ($id === $currentUserId) ? null : $id,
     ]);
     $catalogView = (new ProfilesCatalogView($profilesSliceRequest));
 
