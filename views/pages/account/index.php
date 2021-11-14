@@ -15,7 +15,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
 
 ?>
 <?= view_html('core/head', [
-  'head_cb' => function () {
+  'head_cb' => function () use ($profile) {
     ?>
     <link href="<?= app()->styleUrl('gen/account-index.css?v=0.0.1') ?>" rel="stylesheet"/>
 
@@ -30,6 +30,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
         'friends_slice_count_next' => config('friends_slice_count_next'),
         //
         'ajax_tags_submit_url' => Routes::i()->ajaxTags(),
+        'tags_target_user_id' => $profile->id,
       ]) ?></script>
     <?php
   },
@@ -95,6 +96,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
     'type' => 'error',
     'text' => 'Ошибка сервера',
     'class' => 'js-general-server-error',
+    'is_visible' => false,
   ]) ?>
 </div>
 

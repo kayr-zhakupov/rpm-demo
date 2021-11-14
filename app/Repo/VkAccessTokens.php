@@ -44,13 +44,8 @@ class VkAccessTokens
     ]));
 
     $db = app()->db();
-
     $sql = $db->sqlInsertQuery('vk_access_tokens', $values);
-
-    $statement = $db->statement($sql, $values);
-
-    $statement->execute();
-
+    ($statement = $db->statement($sql, $values))->execute();
     return $statement->rowCount();
   }
 }

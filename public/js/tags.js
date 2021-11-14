@@ -3,10 +3,12 @@
  */
 const TagsWidgetMgmt = {
   _ajaxSubmitUrl: undefined,
+  _targetUserId: undefined,
 
   init() {
 
     this._ajaxSubmitUrl = window.App.ajax_tags_submit_url
+    this._targetUserId = window.App.tags_target_user_id
 
     document.addEventListener('input', e => {
       const tg = e.target
@@ -33,6 +35,7 @@ const TagsWidgetMgmt = {
       body: build_form_query({
         action: 'add',
         id: tagId,
+        target_id: this._targetUserId,
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
     })
@@ -40,10 +43,13 @@ const TagsWidgetMgmt = {
       .then(response => {
         if (response === undefined) return
 
+        const toasts = response.toasts
+        if (toasts) {
+          toasts.forEach(Toasts.pushToastHtml)
+        }
+
         console.log(response)
       })
-
-    console.log(tg.value,)
   }
 };
 

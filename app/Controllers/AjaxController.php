@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Middleware\Auth;
 use App\Repo\Profiles;
+use App\Repo\Tags;
 
 class AjaxController
 {
@@ -29,14 +31,37 @@ class AjaxController
 
   public function tags()
   {
-    dd($_POST);
-    $action = $_POST['action'] ?? null;
+    $result = [];
+    $error = null;
 
-    if (empty($action)) return [];
+    try {
+      $ownerId = Auth::i()->getCurrentVkAccessToken();
 
-    return [
-      'action' => $action,
-      'r' => 'yeah',
-    ];
+      /*if (empty($ownerId))*/ throw new \Exception('Not authorized');
+
+      $action = $_POST['action'] ?? null;
+
+      switch ($action) {
+        case 'add':
+          Tags::i()->insert([
+            'owner_id'
+          ]);
+      }
+
+    } catch (\Throwable $e) {
+      $error = $e->getMessage();
+    }
+
+    if ($error) {
+      $result['error'] = $error;
+      $result['toasts'] = [
+        view_html('components/toast', [
+          'type' => 'error',
+          'text' => $error,
+        ]),
+      ];
+    }
+
+    return $result;
   }
 }
