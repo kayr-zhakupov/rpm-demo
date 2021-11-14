@@ -31,19 +31,20 @@ class IndexController
 
     $profile = Profiles::i()->fetchProfileById($id);
     $sliceCountInitial = config('friends_slice_count_initial');
-    $friendsSlice = $isMyAccount
+    $profileSlice = $isMyAccount
       ? Profiles::i()->fetchFriendsOrTaggedProfilesListSlice($sliceCountInitial)
       : Profiles::i()->fetchMutualFriendsListSlice(null, $id, $sliceCountInitial);
-    $friendsSliceItems = $friendsSlice['items'];
+    $profilesSliceItems = $profileSlice['items'];
     $allMyTags = Tags::i()->getAllMyTags();
     $profileTags = $isMyAccount ? [] : Tags::i()->tagsForProfile($id);
 
     return view_html('pages/account/index', [
       'profile' => $profile,
       'session' => Auth::i()->ensureCurrentSession(),
-      'friends_count' => $friendsSlice['count'],
-      'friends' => $friendsSliceItems,
-      'has_full_friends_list' => (count($friendsSliceItems) < $sliceCountInitial),
+      'title' => "Все друзья",
+      'total_count' => $profileSlice['count'],
+      'profiles_slice_items' => $profilesSliceItems,
+      'has_full_list' => (count($profilesSliceItems) < $sliceCountInitial),
       'all_tags' => $allMyTags,
       'profile_tags' => $profileTags,
     ]);

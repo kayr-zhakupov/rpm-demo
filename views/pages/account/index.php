@@ -4,9 +4,10 @@
  *
  * @var \App\Models\VkAccessTokenRecord $session
  * @var \App\Models\ProfileData $profile
- * @var int $friends_count
- * @var array[] $friends
- * @var bool $has_full_friends_list
+ * @var string $title
+ * @var int $total_count
+ * @var array[] $profiles_slice_items
+ * @var bool $has_full_list
  * @var \App\Models\TagRecord[] $all_tags
  * @var \App\Models\TagRecord[] $profile_tags
  */
@@ -67,33 +68,10 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
     <?php endif; ?>
   </div>
 
-  <div class="account-index-friends-catalog">
-
-    <div class="friends-catalog-head">
-      <span>Все друзья</span> <i><?= $friends_count ?></i>
-    </div>
-
-    <div
-      class="friends-list-scrollable js-infinite-scroll"
-      data-count="<?= count($friends) ?>"
-      data-has-full-list="<?= $has_full_friends_list ?>"
-    >
-
-      <?php
-      foreach ($friends as $friend):
-        echo view_html('pages/account/friend-tile', [
-          'profile' => $friend,
-        ]);
-      endforeach;
-      ?>
-
-      <div class="__load-more js-load-more js-load-more-before" style="height: <?= config('load_more_offset') ?>px">
-        <div class="progress-bar"></div>
-      </div>
-
-    </div>
-
-  </div>
+  <?php echo view_html(
+    'pages/account/profiles-catalog',
+    compact('title', 'total_count', 'profiles_slice_items', 'has_full_list')
+  ); ?>
 </div>
 
 <div class="toast-container js-toast-container">
