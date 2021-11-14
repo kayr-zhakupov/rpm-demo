@@ -26,11 +26,19 @@ $createTableCb(
 );
 
 $createTableCb(
-  'tags_with_users', [
+  'tags', [
     "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
     "owner_id BIGINT UNSIGNED NOT NULL",
+    "name VARCHAR(64) NOT NULL",
+    "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+  ]
+);
+
+$createTableCb(
+  'tags_with_users', [
+    "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
     "target_id BIGINT UNSIGNED NOT NULL",
-    "tag_id INT UNSIGNED NOT NULL",
+    "tag_id BIGINT UNSIGNED NOT NULL",
     "is_deleted BOOL NOT NULL DEFAULT 0",
     "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
   ]

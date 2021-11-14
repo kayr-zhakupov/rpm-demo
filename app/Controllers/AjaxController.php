@@ -44,7 +44,7 @@ class AjaxController
       $targetId = $_POST['target_id'] ?? null;
 
       switch ($action) {
-        case 'add':
+        case 'insert_tag_to_user':
           Tags::i()->insert([
             'owner_id' => $ownerId,
             'tag_id' => $tagId,
