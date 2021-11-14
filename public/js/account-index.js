@@ -9,6 +9,7 @@ class LazyScrollComponent {
     this._hasFullList = !!this._el.dataset.hasFullList
 
     this._attachScrollListener()
+    this._attachSearchFilterListener()
     this._refreshListState()
   }
 
@@ -36,6 +37,10 @@ class LazyScrollComponent {
     this._cbRemoveScrollListener = () => {
       this._el.removeEventListener('scroll', listener)
     }
+  }
+
+  _attachSearchFilterListener() {
+    // document.addEventListener('change')
   }
 
   _fetchFriendsSlice(count, offset) {
