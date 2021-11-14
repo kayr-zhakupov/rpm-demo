@@ -1,7 +1,12 @@
+/**
+ * @var {{ infinite_scroll_threshold: number, }} App
+ */
+/**
+ * @typedef {{ html: string, }} TProfilesListResponse
+ */
 class LazyScrollComponent {
   _scrollableEl = undefined
   _isBusy = false
-  _cvAfterBusyUnlock = undefined
   _hasFullList = false
   _cbRemoveScrollListener = undefined
 
@@ -50,6 +55,11 @@ class LazyScrollComponent {
       })
   }
 
+  /**
+   * @param {TProfilesListResponse} response
+   * @param cbOnEnd
+   * @private
+   */
   _applySliceResponse(response, cbOnEnd) {
     if (!response) {
       cbOnEnd(false)
