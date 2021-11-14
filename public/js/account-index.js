@@ -67,6 +67,8 @@ class LazyScrollComponent {
       this._refreshListState()
     }
 
+    this._scrollableEl.dataset.tags = response.tags_str
+
     cbOnEnd(true)
   }
 
