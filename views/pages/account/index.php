@@ -18,7 +18,9 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
   'head_cb' => function () {
     ?>
     <link href="<?= app()->styleUrl('gen/account-index.css?v=0.0.1') ?>" rel="stylesheet"/>
+    <script src="<?= app()->scriptUrl('base.js') ?>"></script>
     <script src="<?= app()->scriptUrl('account-index.js') ?>"></script>
+    <script src="<?= app()->scriptUrl('toasts.js') ?>"></script>
     <script>window.App = <?= json_encode([
         'infinite_scroll_threshold' => config('load_more_offset'),
         'ajax_get_friends_slice_url' => app()->appUrl('ajax/friends'),
@@ -77,6 +79,19 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
     </div>
 
   </div>
+</div>
+
+<div class="toast-container js-toast-container">
+  <?= view_html('components/toast', [
+    'type' => 'error',
+    'text' => 'Ошибка сервера',
+    'class' => '--show',
+  ]) ?>
+  <?= view_html('components/toast', [
+    'type' => 'success',
+    'text' => 'Тэг добавлен',
+    'class' => '--show',
+  ]) ?>
 </div>
 
 </body>
