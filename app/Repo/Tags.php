@@ -3,12 +3,36 @@
 namespace App\Repo;
 
 use App\Foundation\Concerns\IsSingleton;
+use App\Middleware\Auth;
+use App\Models\TagRecord;
 
 class Tags
 {
   use IsSingleton;
 
   private static Tags $instance;
+
+  /** @var \App\Models\TagRecord[] */
+  protected array $allMyTagsCached;
+
+  public function getAllMyTags()
+  {
+    if (!isset($this->allMyTagsCached)) {
+      $sql = implode(' ', [
+        'SELECT * FROM tags',
+        'WHERE `owner_id` = :owner_id',
+      ]);
+
+      $statement = app()->db()->statement($sql, [
+        'owner_id' => Auth::i()->getCurrentUserId(),
+      ]);
+      $statement->setFetchMode(\PDO::FETCH_CLASS, TagRecord::class);
+      $statement->execute();
+      $this->allMyTagsCached = $statement->fetchAll();
+    }
+
+    return $this->allMyTagsCached;
+  }
 
   public function insert(array $values)
   {

@@ -1,15 +1,11 @@
 <?php
 /**
+ * @see views/pages/account/index.php:57
  *
+ * @var array $all_tags
  */
 
 use App\Repo\Routes;
-
-$tagOptions = [
-  ['id' => 1, 'name' => 'first_tag'],
-  ['id' => 2, 'name' => 'second_tag'],
-  ['id' => 3, 'name' => 'third_tag'],
-];
 
 ?>
 

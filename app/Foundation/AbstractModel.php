@@ -4,20 +4,28 @@ namespace App\Foundation;
 
 class AbstractModel
 {
-  protected array $attributes;
-
-  public function __construct($input)
+  /**
+   * @param null|\App\Foundation\AbstractModel|array $input
+   */
+  public function __construct($input = null)
   {
     if ($input instanceof AbstractModel) {
-      $input = $input->get();
+      $input = $input->toArray();
     }
 
-    $this->attributes = (array) $input;
+    foreach ($input ?? [] as $key => $value) {
+      $this->{$key} = $value;
+    }
   }
 
-  public function get(?string $key = null)
+  public function toArray(): array
   {
-    return arr_get($this->attributes, $key);
+    dd(__METHOD__);
+  }
+
+  public function get(?string $key = null, $default = null)
+  {
+    return property_exists($this, $key) ? $this->{$key} : $default;
   }
 
   public function __get($name)
