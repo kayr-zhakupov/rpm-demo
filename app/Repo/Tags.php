@@ -72,6 +72,8 @@ class Tags
    */
   public function tagsForProfiles(array $profileIds): array
   {
+    if (empty($profileIds)) return [];
+
     $inPlaceholders = [];
     $inBindings = [];
     foreach ($profileIds as $i => $profileId) {
@@ -88,7 +90,7 @@ class Tags
         'target_id' => 'tu.target_id',
       ]),
       'FROM tags t ',
-      'JOIN tags_with_users tu ON t.id = tu.tag_id',
+      'INNER JOIN tags_with_users tu ON t.id = tu.tag_id',
       'WHERE `t`.`owner_id` = :owner_id',
       /**/ 'AND `tu`.`target_id` IN (' . implode(',', $inPlaceholders) . ')',
       'ORDER BY `t`.`created_at` ASC',

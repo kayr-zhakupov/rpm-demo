@@ -25,6 +25,11 @@ class LazyScrollComponent {
     if (this._hasFullList) {
       this._onFullListLoad()
     }
+
+    const loadMoreEl = this._scrollableEl.querySelector('.js-load-more')
+    if (loadMoreEl) {
+      loadMoreEl.style.visibility = this._hasFullList ? 'collapse' : 'visible'
+    }
   }
 
   _clearList() {
@@ -124,8 +129,6 @@ class LazyScrollComponent {
       this._cbRemoveScrollListener()
       this._cbRemoveScrollListener = undefined
     }
-
-    this._scrollableEl.querySelector('.js-load-more').remove()
   }
 
   _loadMore() {

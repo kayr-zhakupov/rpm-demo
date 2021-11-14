@@ -38,9 +38,17 @@ class Profiles
         'tags' => '',
       ];
 
-    if ($tags = $params['tags']) {
-      if (is_string($tags)) $tags = explode(',', $tags);
+    $tags = (function ($in) {
+      if (empty($in)) return [];
 
+      if (is_string($in)) {
+        $in = explode(',', $in);
+      }
+
+      return array_filter($in);
+    })($params['tags']);
+
+    if ($tags) {
       $items = $this->fetchProfilesByTags($tags, $count, $offset, $params);
       $slice = [
         'count' => count($items),
@@ -75,10 +83,19 @@ class Profiles
     ]);
   }
 
+  /**
+   * @param array $tags
+   * @param int|null $count
+   * @param int $offset
+   * @param array $params
+   * @return array[]
+   * @throws \Exception
+   */
   public function fetchProfilesByTags(array $tags, ?int $count = null, int $offset = 0, array $params = [])
   {
     $inPlaceholders = [];
     $inBindings = [];
+    $tags = array_unique($tags);
     foreach ($tags as $i => $profileId) {
       $placeholder = 'p' . $i;
       $inPlaceholders[] = ':' . $placeholder;
@@ -86,25 +103,31 @@ class Profiles
     }
 
     $sql = implode(' ', [
+
       'SELECT `tu`.`target_id` AS target_id',
       'FROM tags_with_users tu',
-      'JOIN tags t ON tu.tag_id = t.id',
+      'INNER JOIN tags t ON tu.tag_id = t.id',
       'WHERE `t`.`owner_id` = :owner_id',
       /**/ 'AND `tu`.`tag_id` IN (' . implode(',', $inPlaceholders) . ')',
-      'ORDER BY `tu`.`created_at` DESC',
+      'GROUP BY `tu`.`target_id`',
+      'HAVING COUNT(DISTINCT `tu`.`tag_id`) >= :tags_count',
+      'ORDER BY MAX(`tu`.`id`) DESC',
       'LIMIT ' . $count,
       'OFFSET ' . $offset,
     ]);
 
     $statement = app()->db()->statement($sql, [
         'owner_id' => Auth::i()->getCurrentUserId(),
+        'tags_count' => count($tags),
       ] + $inBindings);
     $statement->execute();
     $profileIds = arr_pluck($statement->fetchAll(), 'target_id');
 
-    return VkApi::make()->fetchProfiles($profileIds, [
-      'photo_100', 'online',
-    ]);
+    return $profileIds
+      ? VkApi::make()->fetchProfiles($profileIds, [
+        'photo_100', 'online',
+      ])
+      : [];
   }
 
   /**
