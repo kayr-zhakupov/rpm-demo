@@ -19,25 +19,11 @@ const TagsWidgetMgmt = {
 
     document.addEventListener('click', e => {
       const tg = e.target
-      if (tg.matches('.js-tags-ajax-submit')) {
+      if (tg.matches('.js-tag-insert-ajax-submit')) {
         e.preventDefault()
         this._insertTag(tg.closest('form'))
       }
     })
-  },
-
-  _ajaxResponsePipe(raw) {
-    if (!!(raw && (raw.status === 200))) {
-      return response = raw
-        .json()
-        .then(response => {
-          if (response.toasts) response.toasts.forEach(Toasts.pushToastHtml)
-          return response
-        })
-    }
-
-    document.querySelector('.js-general-server-error').classList.add('--show')
-    return undefined;
   },
 
   _insertTag(form) {
@@ -56,7 +42,7 @@ const TagsWidgetMgmt = {
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
     })
-      .then(raw => this._ajaxResponsePipe(raw))
+      .then(ajax_response_pipe)
   },
 
   _insertTagToUser(tagId) {
@@ -70,7 +56,7 @@ const TagsWidgetMgmt = {
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
     })
-      .then(raw => this._ajaxResponsePipe(raw))
+      .then(ajax_response_pipe)
   }
 };
 

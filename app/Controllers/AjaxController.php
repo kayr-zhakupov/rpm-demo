@@ -24,6 +24,7 @@ class AjaxController
 
     return [
       'html' => $html,
+      'offset' => $offset,
       'count_real' => ($realCount = count($sliceItems)),
       'is_last_slice' => ($realCount < $count),
     ];

@@ -1,12 +1,13 @@
 class LazyScrollComponent {
-  _el = undefined
-  _isLoadingMore = false
+  _scrollableEl = undefined
+  _isBusy = false
+  _cvAfterBusyUnlock = undefined
   _hasFullList = false
   _cbRemoveScrollListener = undefined
 
   constructor(el) {
-    this._el = el
-    this._hasFullList = !!this._el.dataset.hasFullList
+    this._scrollableEl = el
+    this._hasFullList = !!this._scrollableEl.dataset.hasFullList
 
     this._attachScrollListener()
     this._attachSearchFilterListener()
@@ -14,11 +15,11 @@ class LazyScrollComponent {
   }
 
   _refreshListState() {
-    const offsetY = this._el.scrollTop
-    const offsetYMax = this._el.scrollHeight - this._el.clientHeight
+    const offsetY = this._scrollableEl.scrollTop
+    const offsetYMax = this._scrollableEl.scrollHeight - this._scrollableEl.clientHeight
 
     if (offsetYMax - offsetY <= window.App.infinite_scroll_threshold) {
-      (!this._isLoadingMore) && (!this._hasFullList) && this._loadMore(this._el)
+      (!this._isBusy) && (!this._hasFullList) && this._loadMore()
     }
 
     if (this._hasFullList) {
@@ -26,40 +27,60 @@ class LazyScrollComponent {
     }
   }
 
+  _reloadList() {
+    this._fetchFriendsSlice(undefined, 0)
+      .then(response => {
+        // console.log(response)
+      })
+  }
+
   _attachScrollListener() {
     const listener = () => {
-      if (this._isLoadingMore) return
+      if (this._isBusy) return
 
       this._refreshListState()
     }
 
-    this._el.addEventListener('scroll', listener)
+    this._scrollableEl.addEventListener('scroll', listener)
     this._cbRemoveScrollListener = () => {
-      this._el.removeEventListener('scroll', listener)
+      this._scrollableEl.removeEventListener('scroll', listener)
     }
   }
 
   _attachSearchFilterListener() {
-    // document.addEventListener('change')
+    document.addEventListener('click', (e) => {
+      const tg = e.target
+      if (tg.matches('.js-tag-filter-submit')) {
+        (!this._isBusy) && this._reloadList()
+      }
+    })
   }
 
-  _fetchFriendsSlice(count, offset) {
+  _getTagFilterIds() {
+    const ids = []
+    const checkboxEls = document.querySelectorAll('.js-tags-filter .js-tag-filter-checkbox')
+    checkboxEls.forEach(el => {
+      el.checked && ids.push(el.dataset.id)
+    })
+    return ((checkboxEls.length === ids.length) || (!ids.length)) ? '' : ids.join(',')
+  }
+
+  _fetchFriendsSlice(count, offset, tagIds) {
+    if (count === undefined) count = (+window.App.friends_slice_count_next)
+    if (offset === undefined) offset = (+this._scrollableEl.dataset.count) || 0
+    if (tagIds === undefined) tagIds = this._getTagFilterIds()
+
+    console.log(tagIds)
+
     const url = new URL(window.App.ajax_get_friends_slice_url)
     url.searchParams.append('count', count)
     url.searchParams.append('offset', offset)
+    url.searchParams.append('tags', tagIds)
 
     return fetch(url, {
       method: 'get',
     })
-      .then(raw => {
-        const isOk = !!(raw && (raw.status === 200))
-
-        if (isOk) {
-          return raw.json && raw.json()
-        }
-
-        return undefined
-      })
+      .then(ajax_response_pipe)
   }
 
   _onFullListLoad() {
@@ -68,21 +89,19 @@ class LazyScrollComponent {
       this._cbRemoveScrollListener = undefined
     }
 
-    this._el.querySelector('.js-load-more').remove()
+    this._scrollableEl.querySelector('.js-load-more').remove()
   }
 
-  _loadMore(el) {
-    this._isLoadingMore = true
+  _loadMore() {
+    const el = this._scrollableEl
+    this._isBusy = true
     const onEnd = () => {
-      this._isLoadingMore = false
+      this._isBusy = false
     }
 
     const elAppendBefore = el.querySelector('.js-load-more-before')
 
-    const count = (+window.App.friends_slice_count_next)
-    const offset = (+el.dataset.count) || 0
-
-    this._fetchFriendsSlice(count, offset)
+    this._fetchFriendsSlice()
       .then(response => {
         if (!response) {
           onEnd(false)
@@ -97,7 +116,7 @@ class LazyScrollComponent {
           el.insertAdjacentHTML('beforeend', html)
         }
 
-        el.dataset.count = offset + (+response.count_real)
+        el.dataset.count = (+response.offset) + (+response.count_real)
 
         if (response.is_last_slice) {
           this._hasFullList = true

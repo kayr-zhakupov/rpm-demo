@@ -30,13 +30,13 @@ use App\Repo\Routes;
     <input name="tag_new_name" id="tag-new-name">
 
     <button
-      class="js-tags-ajax-submit"
+      class="js-tag-insert-ajax-submit"
       type="submit" name="tag_insert" value="tag_insert"
     >Создать новый тег
     </button>
 
     <button
-      class="js-tags-ajax-submit"
+      class="js-tag-insert-ajax-submit"
       type="submit" name="tag_insert_and_add" value="tag_insert_and_add"
     >Создать новый тег и назначить
     </button>

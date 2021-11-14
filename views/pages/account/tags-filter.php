@@ -8,7 +8,12 @@
 
 <?php if ($all_tags): ?>
 
+  <hr>
+
   <div class="js-tags-filter">
+
+    <div>Фильтр по тегам</div>
+    <br>
 
     <div class="tags-filter">
       <?php
@@ -18,10 +23,11 @@
         ?>
         <div class="tag-filter-badge">
           <input
-            class="tag-filter-checkbox"
+            class="tag-filter-checkbox js-tag-filter-checkbox"
             type="checkbox"
             id="<?= $checkboxId ?>"
             name="<?= $name ?>"
+            data-id="<?= $tag->id ?>"
             checked
           >
           <label
@@ -33,6 +39,13 @@
         </div>
       <?php endforeach; ?>
     </div>
+
+    <br>
+    <button
+      class="js-tag-filter-submit"
+      type="submit"
+      name="tag_filter_submit"
+    >Применить фильтр</button>
 
   </div>
 

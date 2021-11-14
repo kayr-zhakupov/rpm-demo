@@ -71,3 +71,8 @@ hr {
     display: block;
   }
 }
+
+.--busy {
+  opacity: 0.25;
+  cursor: wait;
+}
