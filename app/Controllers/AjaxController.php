@@ -33,6 +33,7 @@ class AjaxController
   {
     $result = [];
     $error = null;
+    $successMessage = null;
 
     try {
       $ownerId = Auth::i()->getCurrentUserId();
@@ -49,6 +50,7 @@ class AjaxController
             'tag_id' => $tagId,
             'target_id' => $targetId,
           ]);
+          $successMessage = "Тэг добавлен";
       }
 
     } catch (\Throwable $e) {
@@ -61,6 +63,15 @@ class AjaxController
         view_html('components/toast', [
           'type' => 'error',
           'text' => $error,
+        ]),
+      ];
+    }
+
+    if ($successMessage) {
+      $result['toasts'] = [
+        view_html('components/toast', [
+          'type' => 'success',
+          'text' => $successMessage,
         ]),
       ];
     }
