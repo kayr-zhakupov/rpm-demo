@@ -2,6 +2,10 @@
 
 namespace App\Foundation;
 
+use App\Exceptions\AuthorizationFailedException;
+use App\Exceptions\HttpException;
+use App\Repo\Routes;
+
 class Router
 {
   public function runController($controller): AppResponse
@@ -16,7 +20,6 @@ class Router
     }
 
     try {
-
       ob_start();
       $result = $controller(...$args);
       $body = ob_get_clean();
@@ -25,6 +28,15 @@ class Router
       $response->setStatus(200);
 
     } catch (\Throwable $e) {
+
+      if ($e instanceof AuthorizationFailedException) {
+        $this->redirectAndDie(Routes::i()->login());
+      } elseif ($e instanceof HttpException) {
+        $response
+          ->setStatus($status = $e->getStatus())
+          ->setBody(sprintf('%d | %s', $status, $e->getMessage()));
+      }
+
       error_log($e);
       $response
         ->setStatus(500)

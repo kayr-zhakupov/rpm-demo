@@ -2,6 +2,7 @@
 
 namespace App\Vk;
 
+use App\Exceptions\AuthorizationFailedException;
 use App\Foundation\CurlResponse;
 use App\Foundation\Fetch;
 use App\Middleware\Auth;
@@ -36,8 +37,12 @@ class VkApi
     ))
       ->request();
 
-    if ($errorMessage = $response->getNestedValue('error.error_msg')) {
-      die($errorMessage);
+    if ($errorCode = $response->getNestedValue('error.error_code')) {
+      if ($errorCode === 5) {
+        throw new AuthorizationFailedException();
+      }
+
+      die('Error ' . $errorCode . ': ' . $response->getNestedValue('error.error_msg'));
     }
 
     return $response;

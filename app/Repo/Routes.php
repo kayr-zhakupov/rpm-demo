@@ -24,4 +24,9 @@ class Routes
   {
     return app()->appUrl('ajax/tags');
   }
+
+  public function login()
+  {
+    return app()->appUrl('authorize');
+  }
 }
