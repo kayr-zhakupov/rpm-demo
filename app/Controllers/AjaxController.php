@@ -40,17 +40,28 @@ class AjaxController
       if (empty($ownerId)) throw new \Exception('Not authorized');
 
       $action = $_POST['action'] ?? null;
-      $tagId = $_POST['id'] ?? null;
       $targetId = $_POST['target_id'] ?? null;
 
       switch ($action) {
         case 'insert_tag_to_user':
-          Tags::i()->insert([
-            'owner_id' => $ownerId,
+          $tagId = $_POST['id'] ?? null;
+          Tags::i()->insertTagToUser([
             'tag_id' => $tagId,
             'target_id' => $targetId,
           ]);
           $successMessage = "Тэг добавлен";
+          break;
+
+        case 'insert_tag':
+          $name = trim($_POST['name'] ?? '');
+          if (empty($name)) throw new \Exception('Name is empty');
+
+          Tags::i()->insert([
+            'owner_id' => $ownerId,
+            'name' => $name,
+          ]);
+          $successMessage = sprintf("Тэг `%s` создан", $name);
+          break;
       }
 
     } catch (\Throwable $e) {

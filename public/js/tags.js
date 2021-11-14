@@ -21,28 +21,32 @@ const TagsWidgetMgmt = {
       const tg = e.target
       if (tg.matches('.js-tags-ajax-submit')) {
         e.preventDefault()
-        this._insertTag(tg)
+        this._insertTag(tg.closest('form'))
       }
     })
   },
 
   _ajaxResponsePipe(raw) {
-    let response = undefined
-
     if (!!(raw && (raw.status === 200))) {
-      response = raw.json && raw.json()
-    } else {
-      document.querySelector('.js-general-server-error').classList.add('--show')
-      return response
+      return response = raw
+        .json()
+        .then(response => {
+          if (response.toasts) response.toasts.forEach(Toasts.pushToastHtml)
+          return response
+        })
     }
 
-    if (response.toasts) response.toasts.forEach(Toasts.pushToastHtml)
-
-    return response
+    document.querySelector('.js-general-server-error').classList.add('--show')
+    return undefined;
   },
 
   _insertTag(form) {
-    const name = form.querySelector('[name=tag_new_name]')
+    const name = form.querySelector('[name=tag_new_name]').value
+    if (!name) {
+      alert("Name is empty")
+      return
+    }
+
     const url = this._ajaxSubmitUrl
     return fetch(url, {
       method: 'post',

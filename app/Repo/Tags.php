@@ -14,6 +14,19 @@ class Tags
   {
     $values = array_intersect_key($values, array_flip([
       'owner_id',
+      'name',
+    ]));
+
+    $db = app()->db();
+    $sql = $db->sqlInsertQuery('tags', $values);
+    ($statement = $db->statement($sql, $values))->execute();
+    return $statement->rowCount();
+  }
+
+  public function insertTagToUser(array $values)
+  {
+    $values = array_intersect_key($values, array_flip([
+      'owner_id',
       'target_id',
       'tag_id',
     ]));
