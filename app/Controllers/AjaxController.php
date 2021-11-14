@@ -19,7 +19,9 @@ class AjaxController
     })($_GET['tags']);
     $doIncludeSliceData = array_key_exists('dbg', $_GET);
 
-    $slice = Profiles::i()->fetchFriendsListSlice($count, $offset);
+    $slice = Profiles::i()->fetchFriendsOrTaggedProfilesListSlice($count, $offset, [
+      'tags' => $tags,
+    ]);
     $sliceItems = $slice['items'];
 
     $html = implode('', array_map(function (array $profileData) {

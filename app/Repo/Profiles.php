@@ -3,6 +3,7 @@
 namespace App\Repo;
 
 use App\Foundation\Concerns\IsSingleton;
+use App\Middleware\Auth;
 use App\Models\ProfileData;
 use App\Vk\VkApi;
 
@@ -26,28 +27,84 @@ class Profiles
    * @return array
    * [
    ** count: int,
-   * общее количество друзей
+   * общее количество позиций
    ** items: array,
    * ]
    */
-  public function fetchFriendsListSlice(?int $count = null, int $offset = 0, array $params = []): array
+  public function fetchFriendsOrTaggedProfilesListSlice(?int $count = null, int $offset = 0, array $params = []): array
   {
     $params = $params + [
         'do_include_tags' => true,
+        'tags' => '',
       ];
 
-    $slice = VkApi::make()->fetchFriendsList([
-      'photo_100', 'online',
-    ], [
-      'count' => $count,
-      'offset' => $offset,
-    ]);
+    if ($tags = $params['tags']) {
+      if (is_string($tags)) $tags = explode(',', $tags);
+
+      $items = $this->fetchProfilesByTags($tags, $count, $offset, $params);
+      $slice = [
+        'count' => count($items),
+        'items' => $items,
+      ];
+    } else {
+      $slice = $this->fetchFriendsListSlice($count, $offset);
+    }
 
     if ($params['do_include_tags']) {
       $slice['items'] = $this->extendSliceItemsWithTags($slice['items']);
     }
 
     return $slice;
+  }
+
+  /**
+   * @return array
+   * [
+   ** count: int,
+   * общее количество друзей
+   ** items: array,
+   * ]
+   */
+  public function fetchFriendsListSlice(?int $count = null, int $offset = 0): array
+  {
+    return VkApi::make()->fetchFriendsList([
+      'photo_100', 'online',
+    ], [
+      'count' => $count,
+      'offset' => $offset,
+    ]);
+  }
+
+  public function fetchProfilesByTags(array $tags, ?int $count = null, int $offset = 0, array $params = [])
+  {
+    $inPlaceholders = [];
+    $inBindings = [];
+    foreach ($tags as $i => $profileId) {
+      $placeholder = 'p' . $i;
+      $inPlaceholders[] = ':' . $placeholder;
+      $inBindings[$placeholder] = $profileId;
+    }
+
+    $sql = implode(' ', [
+      'SELECT `tu`.`target_id` AS target_id',
+      'FROM tags_with_users tu',
+      'JOIN tags t ON tu.tag_id = t.id',
+      'WHERE `t`.`owner_id` = :owner_id',
+      /**/ 'AND `tu`.`tag_id` IN (' . implode(',', $inPlaceholders) . ')',
+      'ORDER BY `tu`.`created_at` DESC',
+      'LIMIT ' . $count,
+      'OFFSET ' . $offset,
+    ]);
+
+    $statement = app()->db()->statement($sql, [
+        'owner_id' => Auth::i()->getCurrentUserId(),
+      ] + $inBindings);
+    $statement->execute();
+    $profileIds = arr_pluck($statement->fetchAll(), 'target_id');
+
+    return VkApi::make()->fetchProfiles($profileIds, [
+      'photo_100', 'online',
+    ]);
   }
 
   /**

@@ -99,7 +99,6 @@ class VkApi
   }
 
   /**
-   * @link https://vk.com/dev/users.get
    * @param array|string $fields
    */
   public function fetchSingleProfile($id, $fields = ''): ProfileData
@@ -112,6 +111,7 @@ class VkApi
   }
 
   /**
+   * @link https://vk.com/dev/users.get
    * @param array $ids
    * @param string $fields
    * @return array[]

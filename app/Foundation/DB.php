@@ -67,6 +67,8 @@ class DB
       );
     }
 
+    $statement->setFetchMode(\PDO::FETCH_ASSOC);
+
     if ($transform !== null) {
       $transform($statement, $this->pdo);
     }

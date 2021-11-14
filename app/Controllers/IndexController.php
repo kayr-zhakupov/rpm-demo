@@ -32,7 +32,7 @@ class IndexController
     $profile = Profiles::i()->fetchProfileById($id);
     $sliceCountInitial = config('friends_slice_count_initial');
     $friendsSlice = $isMyAccount
-      ? Profiles::i()->fetchFriendsListSlice($sliceCountInitial)
+      ? Profiles::i()->fetchFriendsOrTaggedProfilesListSlice($sliceCountInitial)
       : Profiles::i()->fetchMutualFriendsListSlice(null, $id, $sliceCountInitial);
     $friendsSliceItems = $friendsSlice['items'];
     $allMyTags = Tags::i()->getAllMyTags();
