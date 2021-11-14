@@ -20,8 +20,8 @@ class Routes
     return app()->appUrl();
   }
 
-  public function tags()
+  public function ajaxTags()
   {
-    return app()->appUrl('tags');
+    return app()->appUrl('ajax/tags');
   }
 }

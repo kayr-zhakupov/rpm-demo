@@ -30,8 +30,9 @@ $controller = call_user_func(function () {
 
   switch ($requestUriNoArgs) {
     case 'ajax/friends':
-      // приём кода авторизации со стороны ВК
       return [new AjaxController(), 'friends'];
+    case 'ajax/tags':
+      return [new AjaxController(), 'tags'];
     case 'authorize/vk':
       // приём кода авторизации со стороны ВК
       return [new AuthController(), 'acceptCode'];

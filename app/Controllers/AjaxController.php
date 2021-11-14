@@ -26,4 +26,17 @@ class AjaxController
       'is_last_slice' => ($realCount < $count),
     ];
   }
+
+  public function tags()
+  {
+    dd($_POST);
+    $action = $_POST['action'] ?? null;
+
+    if (empty($action)) return [];
+
+    return [
+      'action' => $action,
+      'r' => 'yeah',
+    ];
+  }
 }

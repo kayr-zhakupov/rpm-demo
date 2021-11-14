@@ -13,7 +13,7 @@ $tagOptions = [
 
 ?>
 
-<form action="<?= Routes::i()->tags() ?>">
+<form action="<?= Routes::i()->ajaxTags() ?>">
 
   <label for="tag-choice">Добавить тэг</label>
   <select

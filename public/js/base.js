@@ -9,3 +9,7 @@ function after_dom(callback) {
     callback()
   }
 }
+
+function build_form_query(params) {
+  return Object.entries(params).map(([k,v])=>{return k+'='+v}).join('&')
+}

@@ -29,7 +29,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
         'ajax_get_friends_slice_url' => app()->appUrl('ajax/friends'),
         'friends_slice_count_next' => config('friends_slice_count_next'),
         //
-        'ajax_tags_submit_url' => Routes::i()->tags(),
+        'ajax_tags_submit_url' => Routes::i()->ajaxTags(),
       ]) ?></script>
     <?php
   },
@@ -90,6 +90,12 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
   </div>
 </div>
 
-<div class="toast-container js-toast-container"></div>
+<div class="toast-container js-toast-container">
+  <?= view_html('components/toast', [
+    'type' => 'error',
+    'text' => 'Ошибка сервера',
+    'class' => 'js-general-server-error',
+  ]) ?>
+</div>
 
 </body>
