@@ -19,4 +19,9 @@ class Routes
   {
     return app()->appUrl();
   }
+
+  public function tags()
+  {
+    return app()->appUrl('tags');
+  }
 }

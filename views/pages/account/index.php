@@ -48,6 +48,10 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
 
       <hr>
 
+      <?= view_html('pages/account/tags') ?>
+
+      <hr>
+
       <a href="<?= Routes::i()->my() ?>">Вернуться к Моему аккаунту</a>
     <?php endif; ?>
   </div>
@@ -81,17 +85,6 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
   </div>
 </div>
 
-<div class="toast-container js-toast-container">
-  <?= view_html('components/toast', [
-    'type' => 'error',
-    'text' => 'Ошибка сервера',
-    'class' => '--show',
-  ]) ?>
-  <?= view_html('components/toast', [
-    'type' => 'success',
-    'text' => 'Тэг добавлен',
-    'class' => '--show',
-  ]) ?>
-</div>
+<div class="toast-container js-toast-container"></div>
 
 </body>
