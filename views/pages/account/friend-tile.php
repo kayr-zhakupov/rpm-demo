@@ -10,7 +10,7 @@ $profile = new ProfileData($profile);
 $displayName = $profile->displayName();
 ?>
 
-<div class="friend-tile">
+<div class="friend-tile js-friend-tile">
   <a
     class="__stretched-link"
     href="<?= Routes::i()->user($profile->id) ?>"

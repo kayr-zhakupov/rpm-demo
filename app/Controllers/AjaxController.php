@@ -12,6 +12,11 @@ class AjaxController
   {
     $count = $_GET['count'] ?? null;
     $offset = $_GET['offset'] ?? 0;
+    $tags = (function($in) {
+      $_ = $in ?? '';
+      if (empty($_)) return [];
+      return array_filter(explode(',', $_));
+    })($_GET['tags']);
 
     $slice = Profiles::i()->fetchFriendsListSlice($count, $offset);
     $sliceItems = $slice['items'];
@@ -26,6 +31,7 @@ class AjaxController
       'html' => $html,
       'offset' => $offset,
       'count_real' => ($realCount = count($sliceItems)),
+      'tags_str' => implode(',', $tags),
       'is_last_slice' => ($realCount < $count),
     ];
   }

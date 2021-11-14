@@ -27,11 +27,47 @@ class LazyScrollComponent {
     }
   }
 
+  _clearList() {
+    this._scrollableEl.querySelectorAll('.js-friend-tile')
+      .forEach(el => el.remove())
+  }
+
   _reloadList() {
-    this._fetchFriendsSlice(undefined, 0)
+    this._isBusy = true
+    const onEnd = () => {
+      this._isBusy = false
+    }
+    this._clearList()
+
+    this._fetchFriendsSlice(undefined, 0, this._getTagFilterIds())
       .then(response => {
-        // console.log(response)
+        this._applySliceResponse(response, onEnd)
       })
+  }
+
+  _applySliceResponse(response, cbOnEnd) {
+    if (!response) {
+      cbOnEnd(false)
+      return
+    }
+
+    if (response.html !== undefined) {
+      const elAppendBefore = this._scrollableEl.querySelector('.js-load-more-before')
+      if (elAppendBefore) {
+        elAppendBefore.insertAdjacentHTML('beforebegin', response.html)
+      } else {
+        this._scrollableEl.insertAdjacentHTML('beforeend', response.html)
+      }
+
+      this._scrollableEl.dataset.count = (+response.offset) + (+response.count_real)
+    }
+
+    if (response.is_last_slice) {
+      this._hasFullList = true
+      this._refreshListState()
+    }
+
+    cbOnEnd(true)
   }
 
   _attachScrollListener() {
@@ -68,9 +104,7 @@ class LazyScrollComponent {
   _fetchFriendsSlice(count, offset, tagIds) {
     if (count === undefined) count = (+window.App.friends_slice_count_next)
     if (offset === undefined) offset = (+this._scrollableEl.dataset.count) || 0
-    if (tagIds === undefined) tagIds = this._getTagFilterIds()
-
-    console.log(tagIds)
+    if (tagIds === undefined) tagIds = this._scrollableEl.dataset.tags || ''
 
     const url = new URL(window.App.ajax_get_friends_slice_url)
     url.searchParams.append('count', count)
@@ -93,37 +127,15 @@ class LazyScrollComponent {
   }
 
   _loadMore() {
-    const el = this._scrollableEl
+    console.log('_loadMore')
     this._isBusy = true
     const onEnd = () => {
       this._isBusy = false
     }
 
-    const elAppendBefore = el.querySelector('.js-load-more-before')
-
     this._fetchFriendsSlice()
       .then(response => {
-        if (!response) {
-          onEnd(false)
-          return;
-        }
-
-        const html = response.html
-
-        if (elAppendBefore) {
-          elAppendBefore.insertAdjacentHTML('beforebegin', html)
-        } else {
-          el.insertAdjacentHTML('beforeend', html)
-        }
-
-        el.dataset.count = (+response.offset) + (+response.count_real)
-
-        if (response.is_last_slice) {
-          this._hasFullList = true
-          this._refreshListState()
-        }
-
-        onEnd(true)
+        this._applySliceResponse(response, onEnd)
       })
   }
 }
