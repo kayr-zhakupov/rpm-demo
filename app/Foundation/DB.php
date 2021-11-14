@@ -93,4 +93,15 @@ class DB
   {
     return (clone $dt)->setTimezone(new \DateTimeZone('utc'))->format("Y-m-d H:i:s");
   }
+
+  public function compileColumns(array $columnsMap)
+  {
+    $columnParts = [];
+
+    foreach ($columnsMap as $alias => $column) {
+      $columnParts[] = $column . ' AS ' . $alias;
+    }
+
+    return implode(',', $columnParts);
+  }
 }

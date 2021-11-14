@@ -113,6 +113,40 @@ function arr_get($array, $key, $default = null)
   return $result;
 }
 
+function data_get($var, $key, $default = null)
+{
+  if (is_object($var)) return $var->{$key} ?? $default;
+  return arr_get($var, $key, $default);
+}
+
+/**
+ * @param array $array
+ * @param mixed $key
+ * @return void[]
+ */
+function arr_pluck(array $array, $key)
+{
+  return array_map(function ($item) use ($key) {
+    return data_get($item, $key);
+  }, $array);
+}
+
+/**
+ * @param array $array
+ * @param mixed $key
+ * @return void[]
+ */
+function arr_key_by(array $array, $key)
+{
+  $result = [];
+
+  foreach ($array as $v) {
+    $result[data_get($v, $key)] = $v;
+  }
+
+  return $result;
+}
+
 /**
  * Случайная alpha-numeric строка заданной длины (из Laravel).
  *

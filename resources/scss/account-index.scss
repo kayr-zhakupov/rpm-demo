@@ -95,14 +95,16 @@
   }
 }
 
-.tags-for-profile {
+.tags-for-profile,
+.friend-tile .__tags {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin: -4px;
 }
 
-.tag-for-profile-badge {
+.tag-for-profile-badge,
+.friend-tile .__tag {
   padding: 4px 8px;
   background-color: var(--color-primary);
   color: var(--color-fore-light);
@@ -134,7 +136,6 @@
     margin-left: -24px;
   }
 }
-
 
 .tag-filter-checkbox:checked + .tag-filter-label {
   background-color: var(--color-primary);

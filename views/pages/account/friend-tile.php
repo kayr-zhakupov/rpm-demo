@@ -22,6 +22,13 @@ $displayName = $profile->displayName();
     >
   </div>
   <div class="friend-tile-main">
-    <div><span><?= $displayName ?></span> <small class="__online-badge"><?= $profile->online ? 'онлайн' : '' ?></small></div>
+    <div><span><?= $displayName ?></span> <small class="__online-badge"><?= $profile->online ? 'онлайн' : '' ?></small>
+    </div>
+
+    <div class="__tags">
+      <?php foreach ($profile->tags ?? [] as $tagRecord): ?>
+        <div class="__tag"><?= $tagRecord->name ?></div>
+      <?php endforeach; ?>
+    </div>
   </div>
 </div>

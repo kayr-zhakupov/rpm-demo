@@ -30,14 +30,24 @@ class Profiles
    ** items: array,
    * ]
    */
-  public function fetchFriendsListSlice(?int $count = null, int $offset = 0): array
+  public function fetchFriendsListSlice(?int $count = null, int $offset = 0, array $params = []): array
   {
-    return VkApi::make()->fetchFriendsList([
+    $params = $params + [
+        'do_include_tags' => true,
+      ];
+
+    $slice = VkApi::make()->fetchFriendsList([
       'photo_100', 'online',
     ], [
       'count' => $count,
       'offset' => $offset,
     ]);
+
+    if ($params['do_include_tags']) {
+      $slice['items'] = $this->extendSliceItemsWithTags($slice['items']);
+    }
+
+    return $slice;
   }
 
   /**
@@ -73,5 +83,23 @@ class Profiles
     return VkApi::make()->fetchSingleProfile($id, [
       'photo_200',
     ]);
+  }
+
+  protected function extendSliceItemsWithTags($profileItems)
+  {
+    $profilesGroupedById = arr_key_by($profileItems, 'id');
+    $tagsForSlice = Tags::i()->tagsForProfiles(array_keys($profilesGroupedById));
+
+    foreach ($tagsForSlice as $tagRecord) {
+      $targetId = $tagRecord->target_id;
+
+      if (!key_exists('tags', $profilesGroupedById[$targetId])) {
+        $profilesGroupedById[$targetId]['tags'] = [];
+      }
+
+      $profilesGroupedById[$targetId]['tags'][] = $tagRecord;
+    }
+
+    return array_values($profilesGroupedById);
   }
 }

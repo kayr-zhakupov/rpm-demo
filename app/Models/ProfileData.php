@@ -14,6 +14,9 @@ use App\Foundation\AbstractModel;
  * @property ?string $photo_100
  * @property ?string $photo_200
  * @property bool $online
+ *
+ * extended:
+ * @property ?\App\Models\TagRecord[] $tags
  */
 class ProfileData extends AbstractModel
 {

@@ -12,11 +12,12 @@ class AjaxController
   {
     $count = $_GET['count'] ?? null;
     $offset = $_GET['offset'] ?? 0;
-    $tags = (function($in) {
+    $tags = (function ($in) {
       $_ = $in ?? '';
       if (empty($_)) return [];
       return array_filter(explode(',', $_));
     })($_GET['tags']);
+    $doIncludeSliceData = array_key_exists('dbg', $_GET);
 
     $slice = Profiles::i()->fetchFriendsListSlice($count, $offset);
     $sliceItems = $slice['items'];
@@ -28,12 +29,16 @@ class AjaxController
     }, $sliceItems));
 
     return [
-      'html' => $html,
-      'offset' => $offset,
-      'count_real' => ($realCount = count($sliceItems)),
-      'tags_str' => implode(',', $tags),
-      'is_last_slice' => ($realCount < $count),
-    ];
+        'html' => $html,
+        'offset' => $offset,
+        'count_real' => ($realCount = count($sliceItems)),
+        'tags_str' => implode(',', $tags),
+        'is_last_slice' => ($realCount < $count),
+      ] + (
+      $doIncludeSliceData ? [
+        'slice' => $slice,
+      ] : []
+      );
   }
 
   public function tags()
