@@ -15,6 +15,14 @@ class ProfilesCatalogView
 
   public function getTitle(): string
   {
+    if ($this->request->getMutualFriendsWith() !== null) {
+      return 'Общие друзья';
+    }
+
+    if ($this->request->getTags()) {
+      return 'Пользователи с указанными тегами';
+    }
+
     return 'Все друзья';
   }
 

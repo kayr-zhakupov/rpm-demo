@@ -18,10 +18,13 @@ class ProfilesSliceRequest
   public function __construct(array $params)
   {
     $this->requestedCount = $params['count'] ?? 0;
-    $this->offset = (int) ($params['offset'] ?: 0);
+    $this->offset = (int)($params['offset'] ?: 0);
     $this->setTags($params['tags'] ?? null);
-    $this->friendsOfId = $params['friends_of_id'] ?? null;
-    $this->mutualFriendsWith = $params['friends_with'] ?? null;
+    $this->friendsOfId = (string)($params['friends_of_id'] ?? null);
+    $this->mutualFriendsWith = (string)($params['friends_with'] ?? null);
+    if ($this->friendsOfId === $this->mutualFriendsWith) {
+      $this->mutualFriendsWith = null;
+    }
   }
 
   protected function setTags($tags)

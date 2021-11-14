@@ -34,7 +34,7 @@ class IndexController
       'offset' => 0,
       'tags' => [],
       'friends_of_id' => $currentUserId,
-      'friends_with' => ($id === $currentUserId) ? null : $id,
+      'friends_with' => $id,
     ]);
     $catalogView = (new ProfilesCatalogView($profilesSliceRequest));
 
