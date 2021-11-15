@@ -22,9 +22,11 @@
 * скалярная величина - возврат как есть
 * null и прочее - ответ 200, пустой вывод
 
-Таблицу в MySQL можно создать запуском скрипта scripts/db-migrate.php.
-
 Манера написания sql-запросов через implode() частично вдохновлена механизмом dbDelta() из WordPress.
+
+Для стилей используется язык scss.
+
+Не использовал Vue и PHP-фреймворки умышленно. Хотелось показать, как обходиться без них.
 
 # Разворот проекта
 
@@ -34,8 +36,6 @@
 * запустить скрипт /scripts/jumpstart.php
 * заполнить файл /env/env.php нужными значениями (vk_client_id - ID приложения; vk_client_secret - защищённый ключ)
 * запустить скрипт /scripts/db-migrate.php
+* `sass ./resources/scss/account-index.scss ./public/css/gen/account-index.css`
+* `sass ./resources/scss/base.scss ./public/css/gen/base.css`
 * `php -S localhost:8001 -t public` (из корневой папки проекта)
-
-# Что можно было ещё добавить и оптимизировать
-
-* 
