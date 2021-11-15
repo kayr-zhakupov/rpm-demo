@@ -7,7 +7,7 @@ $createTableCb = function (string $table, array $columns) {
     $sql = 'CREATE TABLE ' . $table . '(' . implode(', ', array_filter($columns)) . ');';
 
     app()->db()->statement($sql, ['table' => $table])->execute();
-    echo sprintf('Table `%s` has been created', $table) . PHP_EOL;
+    echo sprintf('Таблица `%s` создана', $table) . PHP_EOL;
   } catch (\Throwable $e) {
     echo $e->getMessage() . PHP_EOL;
   }

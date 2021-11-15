@@ -3,7 +3,9 @@
 use App\Foundation\Application;
 
 // constants
-define("APP_BASE_PATH", realpath(__DIR__ . '/..'));
+if (!defined('APP_BASE_PATH')) {
+  define('APP_BASE_PATH', realpath(__DIR__ . '/..'));
+}
 
 // core
 date_default_timezone_set('UTC');

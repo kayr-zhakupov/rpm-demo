@@ -40,7 +40,7 @@ class DB
 
       } catch (\Throwable $e) {
         error_log($e);
-        die("PDO error");
+        die("PDO error" . PHP_EOL);
       }
     }
 
