@@ -34,6 +34,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
       ]) ?></script>
     <?php
   },
+  'title' => $profile->displayName(),
 ]) ?>
 <body class="account-index-page">
 
