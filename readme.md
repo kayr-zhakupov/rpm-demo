@@ -32,7 +32,7 @@
 
 * git clone https://github.com/kayr-zhakupov/rpm-demo.git
 * создать пустую базу данных mysql
-* создать приложение в консоли разработчика ВКонтакте (тип: Сайт; адрес сайта: https://localhost:8001; базовый домен: localhost)
+* создать приложение в консоли разработчика ВКонтакте (тип: Сайт; адрес сайта: http://localhost:8001; базовый домен: localhost)
 * запустить скрипт /scripts/jumpstart.php
 * заполнить файл /env/env.php нужными значениями (vk_client_id - ID приложения; vk_client_secret - защищённый ключ)
 * запустить скрипт /scripts/db-migrate.php
