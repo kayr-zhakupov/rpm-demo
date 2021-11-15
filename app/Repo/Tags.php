@@ -34,7 +34,7 @@ class Tags
     return $this->allMyTagsCached;
   }
 
-  public function insert(array $values)
+  public function insert(array $values, &$lastId = null)
   {
     $values = array_intersect_key($values, array_flip([
       'owner_id',
@@ -44,6 +44,7 @@ class Tags
     $db = app()->db();
     $sql = $db->sqlInsertQuery('tags', $values);
     ($statement = $db->statement($sql, $values))->execute();
+    $lastId = $db->pdo()->lastInsertId();
     return $statement->rowCount();
   }
 

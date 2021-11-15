@@ -76,7 +76,15 @@ class AjaxController
           Tags::i()->insert([
             'owner_id' => $ownerId,
             'name' => $name,
-          ]);
+          ], $newTagId);
+
+          if ($_POST['do_insert_tag_to_user'] ?? false) {
+            Tags::i()->insertTagToUser([
+              'tag_id' => $newTagId,
+              'target_id' => $targetId,
+            ]);
+          };
+
           $successMessage = sprintf("Тэг `%s` создан", $name);
           break;
 

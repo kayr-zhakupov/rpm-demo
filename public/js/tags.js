@@ -42,53 +42,44 @@ const TagsWidgetMgmt = {
     this._widgetEl.classList.toggle('--busy', flag)
   },
 
-  _insertTag(form) {
+  _fetchAction(action, params) {
+    const url = this._ajaxSubmitUrl
+    if (this._isBusy) return
+    this._refreshBusyState(true)
+    const onEnd = () => this._refreshBusyState(false)
+
+    return fetch_post(url, Object.assign({
+      action,
+      target_id: this._targetUserId,
+    }, params))
+      .then(ajax_response_pipe)
+      .then(response => {
+        this._applyAjaxResponse(response, onEnd)
+      })
+  },
+
+  _insertTag(form, doInsertTagToUser = false) {
     const name = form.querySelector('[name=tag_new_name]').value
     if (!name) {
       alert("Name is empty")
       return
     }
-
-    const url = this._ajaxSubmitUrl
-    return fetch_post(url, {
-      action: 'insert_tag',
-      name: name,
+    return this._fetchAction('insert_tag', {
+      name,
+      do_insert_tag_to_user: (doInsertTagToUser ? '1' : ''),
     })
-      .then(ajax_response_pipe)
   },
 
   _insertTagToUser(tagId) {
-    const url = this._ajaxSubmitUrl
-    if (this._isBusy) return
-    this._refreshBusyState(true)
-    const onEnd = () => this._refreshBusyState(false)
-
-    return fetch_post(url, {
-      action: 'insert_tag_to_user',
+    return this._fetchAction('insert_tag_to_user', {
       id: tagId,
-      target_id: this._targetUserId,
     })
-      .then(ajax_response_pipe)
-      .then(response => {
-        this._applyAjaxResponse(response, onEnd)
-      })
   },
 
   _deleteTagToUser(tagId) {
-    const url = this._ajaxSubmitUrl
-    if (this._isBusy) return
-    this._refreshBusyState(true)
-    const onEnd = () => this._refreshBusyState(false)
-
-    return fetch_post(url, {
-      action: 'delete_tag_to_user',
+    return this._fetchAction('delete_tag_to_user', {
       id: tagId,
-      target_id: this._targetUserId,
     })
-      .then(ajax_response_pipe)
-      .then(response => {
-        this._applyAjaxResponse(response, onEnd)
-      })
   },
 
   _applyAjaxResponse(response, cbOnEnd) {
