@@ -23,7 +23,7 @@ const TagsWidgetMgmt = {
       const tg = e.target
       if (tg.matches('.js-tag-insert-ajax-submit')) {
         e.preventDefault()
-        this._insertTag(tg.closest('form'))
+        this._insertTag(tg.closest('form'), (tg.name === 'tag_insert_and_add'))
         return
       }
       if (tg.matches('.js-tag-to-user-delete-submit')) {

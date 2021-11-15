@@ -7,6 +7,9 @@
  */
 
 use App\Repo\Routes;
+use App\Repo\Tags;
+
+$unsetTags = Tags::i()->subtractTagSets($all_tags, $profile_tags);
 
 ?>
 
@@ -49,18 +52,22 @@ use App\Repo\Routes;
     >Создать новый тег и назначить
     </button>
 
-    <hr>
+    <?php if ($unsetTags): ?>
 
-    <label for="tag-choice">Добавить тег</label>
-    <select
-      id="tag-choice" name="tag_choice"
-      class="js-select-tag-choice"
-    >
-      <option value="" selected></option>
-      <?php foreach ($all_tags as $tag): ?>
-        <option value="<?= $tag->id ?>"><?= $tag->name ?></option>
-      <?php endforeach; ?>
-    </select>
+      <hr>
+
+      <label for="tag-choice">Добавить тег</label>
+      <select
+        id="tag-choice" name="tag_choice"
+        class="js-select-tag-choice"
+      >
+        <option value="" selected></option>
+        <?php foreach ($unsetTags as $tag): ?>
+          <option value="<?= $tag->id ?>"><?= $tag->name ?></option>
+        <?php endforeach; ?>
+      </select>
+
+    <?php endif; ?>
 
   </form>
 

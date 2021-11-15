@@ -126,4 +126,19 @@ class Tags
     $statement->execute();
     return $statement->fetchAll();
   }
+
+  /**
+   * @param TagRecord[] $all
+   * @param TagRecord[] $sub
+   */
+  public function subtractTagSets(array $all, array $sub)
+  {
+    foreach ($sub as $tag) {
+      $all = array_filter($all, function ($_tag) use ($tag) {
+        return ($_tag->id !== $tag->id);
+      });
+    }
+
+    return array_values($all);
+  }
 }
