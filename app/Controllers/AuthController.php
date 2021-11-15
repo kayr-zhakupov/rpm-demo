@@ -48,8 +48,8 @@ class AuthController
       'vk_token' => $accessTokenResponse->getNestedValue('access_token'),
       'user_id' => $accessTokenResponse->getNestedValue('user_id'),
       'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
-      'expires_at' => $db->mysqlDateTimeFormat($createdAt),
-      'created_at' => $db->mysqlDateTimeFormat($expiresAt),
+      'expires_at' => $db->mysqlDateTimeFormat($expiresAt),
+      'created_at' => $db->mysqlDateTimeFormat($createdAt),
     ]);
 
     CookieUtils::set(

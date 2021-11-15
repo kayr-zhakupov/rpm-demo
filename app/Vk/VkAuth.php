@@ -58,21 +58,6 @@ class VkAuth
       ]);
   }
 
-  /**
-   * Обрезание path, если в APP_URL указан путь с дополнительным внутренним путём.
-   * @return string
-   */
-  protected function getHost(): string
-  {
-    $urlParts = parse_url(app()->appUrl());
-    extract($urlParts);
-    return implode('', array_filter([
-//      ($scheme = $scheme ?? '') ? ($scheme . '://') : null,
-      $host ?? $path ?? '',
-//      ($port = $port ?? '') ? (':' . $port) : null,
-    ]));
-  }
-
   public function fetchAccessTokenResponse(string $code): CurlResponse
   {
     $response = (new Fetch(

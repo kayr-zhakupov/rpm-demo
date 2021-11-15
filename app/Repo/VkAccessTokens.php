@@ -15,14 +15,18 @@ class VkAccessTokens
   {
     if (empty($token)) return null;
 
+    $now = db()->mysqlDateTimeFormat(new \DateTime());
+
     $sql = implode(' ', [
       'SELECT * FROM vk_access_tokens',
       'WHERE `app_token` = :app_token',
+      /**/'AND `expires_at` > :now',
       'LIMIT 1',
     ]);
 
     $statement = app()->db()->statement($sql, [
       'app_token' => $token,
+      'now' => $now,
     ]);
     $statement->setFetchMode(\PDO::FETCH_CLASS, VkAccessTokenRecord::class);
     $statement->execute();
