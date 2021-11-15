@@ -36,11 +36,15 @@ class Tags
 
   public function insert(array $values, &$lastId = null)
   {
-    $values = array_intersect_key($values, array_flip([
-      'owner_id',
-      'name',
-    ]));
+    $name = trim($values['name'] ?? '');
+    $ownerId = $values['owner_id'] ?? null;
 
+    if ($this->doesTagWithNameExist($name, $ownerId)) return false;
+
+    $values = [
+      'name' => $name,
+      'owner_id' => $ownerId,
+    ];
     $db = app()->db();
     $sql = $db->sqlInsertQuery('tags', $values);
     ($statement = $db->statement($sql, $values))->execute();
@@ -48,17 +52,30 @@ class Tags
     return $statement->rowCount();
   }
 
-  public function doUserHasTag($ownerId, $tagId): bool
+  public function doUserOwnsTag($ownerId, $tagId): bool
   {
     $sql = implode(' ', [
       'SELECT id FROM tags WHERE id = :tag_id AND owner_id = :owner_id LIMIT 1',
     ]);
 
-    return (bool) count(db()->executeStatementAndReturn($sql, [
-        'tag_id' => $tagId,
-        'owner_id' => $ownerId,
-      ])
-        ->fetchAll());
+    return (bool)count(db()->executeStatementAndReturn($sql, [
+      'tag_id' => $tagId,
+      'owner_id' => $ownerId,
+    ])
+      ->fetchAll());
+  }
+
+  public function doesTagWithNameExist($name, $ownerId): bool
+  {
+    $sql = implode(' ', [
+      'SELECT id FROM tags WHERE BINARY name = :name AND owner_id = :owner_id LIMIT 1',
+    ]);
+
+    return (bool)count(db()->executeStatementAndReturn($sql, [
+      'name' => $name,
+      'owner_id' => $ownerId,
+    ])
+      ->fetchAll());
   }
 
   public function doTagToUserExist($tagId, $targetId): bool
@@ -72,7 +89,7 @@ class Tags
       'LIMIT 1',
     ]);
 
-    return (bool) count(db()->executeStatementAndReturn($sql, [
+    return (bool)count(db()->executeStatementAndReturn($sql, [
       'owner_id' => Auth::i()->getCurrentUserId(),
       'tag_id' => $tagId,
       'target_id' => $targetId,
@@ -82,7 +99,7 @@ class Tags
 
   public function insertTagToUser($tagId, $targetId): bool
   {
-    if (!$this->doUserHasTag(Auth::i()->getCurrentUserId(), $tagId)) {
+    if (!$this->doUserOwnsTag(Auth::i()->getCurrentUserId(), $tagId)) {
       throw new \Exception("Forbidden");
     }
 

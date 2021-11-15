@@ -132,6 +132,8 @@ class VkApi
    */
   public function fetchProfiles(array $ids, $fields = ''): array
   {
+    if (empty($ids)) return [];
+
     if (is_array($fields)) $fields = implode(',', $fields);
 
     $response = $this->fetchMethod('users.get', [
