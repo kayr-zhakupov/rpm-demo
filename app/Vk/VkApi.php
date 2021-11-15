@@ -42,7 +42,9 @@ class VkApi
         throw new AuthorizationFailedException();
       }
 
-      die('Error ' . $errorCode . ': ' . $response->getNestedValue('error.error_msg'));
+      $message = 'Error ' . $errorCode . ': ' . $response->getNestedValue('error.error_msg');
+      error_log($message);
+      die($message);
     }
 
     return $response;

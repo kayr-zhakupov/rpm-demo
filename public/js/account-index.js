@@ -106,9 +106,29 @@ class LazyScrollComponent {
     document.addEventListener('click', (e) => {
       const tg = e.target
       if (tg.matches('.js-tag-filter-submit')) {
+        e.preventDefault();
         (!this._isBusy) && this._reloadList()
+        return
+      }
+      if (tg.matches('.js-tag-filter-select-none')) {
+        e.preventDefault()
+        this._toggleTagsAll(false)
+        return
+      }
+      if (tg.matches('.js-tag-filter-select-all')) {
+        e.preventDefault()
+        this._toggleTagsAll(true)
+        return
       }
     })
+  }
+
+  _toggleTagsAll(flag) {
+    document
+      .querySelectorAll('.js-tags-filter .js-tag-filter-checkbox')
+      .forEach(el => {
+        el.checked = flag
+      })
   }
 
   _getTagFilterIds() {

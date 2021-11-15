@@ -11,7 +11,7 @@ $displayName = $profile->displayName();
 $mutualFriendsCount = $profile->common_count;
 ?>
 
-<div class="friend-tile js-friend-tile">
+<div class="friend-tile js-friend-tile" style="height: <?= config('friend_tile_height', 'unset') ?>">
   <a
     class="__stretched-link"
     href="<?= Routes::i()->user($profile->id) ?>"

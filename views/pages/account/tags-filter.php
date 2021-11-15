@@ -41,11 +41,24 @@
     </div>
 
     <br>
+    <div>
+      <button
+        class="js-tag-filter-select-none" type="button"
+      >Сбросить все
+      </button>
+      <button
+        class="js-tag-filter-select-all" type="button"
+      >Выбрать все
+      </button>
+    </div>
+
+    <br>
     <button
       class="js-tag-filter-submit"
       type="submit"
       name="tag_filter_submit"
-    >Применить фильтр</button>
+    >Применить фильтр
+    </button>
 
   </div>
 

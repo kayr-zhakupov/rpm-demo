@@ -179,16 +179,18 @@ class Profiles
       }
     );
 
-    $stats = $this->vkApi()
-      ->fetchMutualFriendsMultiple(
-        Auth::i()->getCurrentUserId(),
-        array_keys($profilesFiltered),
-      );
+    if (!empty($profilesFiltered)) {
+      $stats = $this->vkApi()
+        ->fetchMutualFriendsMultiple(
+          Auth::i()->getCurrentUserId(),
+          array_keys($profilesFiltered),
+        );
 
-    foreach ($stats as $stat) {
-      $profileId = $stat['id'];
+      foreach ($stats as $stat) {
+        $profileId = $stat['id'];
 
-      $allProfilesGroupedById[$profileId]['common_count'] = $stat['common_count'];
+        $allProfilesGroupedById[$profileId]['common_count'] = $stat['common_count'];
+      }
     }
 
     return array_values($allProfilesGroupedById);
