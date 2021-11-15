@@ -48,13 +48,50 @@ class Tags
     return $statement->rowCount();
   }
 
-  public function insertTagToUser(array $values)
+  public function doUserHasTag($ownerId, $tagId): bool
   {
-    $values = array_intersect_key($values, array_flip([
-      'owner_id',
-      'target_id',
-      'tag_id',
-    ]));
+    $sql = implode(' ', [
+      'SELECT id FROM tags WHERE id = :tag_id AND owner_id = :owner_id LIMIT 1',
+    ]);
+
+    return (bool) count(db()->executeStatementAndReturn($sql, [
+        'tag_id' => $tagId,
+        'owner_id' => $ownerId,
+      ])
+        ->fetchAll());
+  }
+
+  public function doTagToUserExist($tagId, $targetId): bool
+  {
+    $sql = implode(' ', [
+      'SELECT tu.id FROM tags_with_users tu',
+      'INNER JOIN tags t ON tu.tag_id = t.id',
+      'WHERE `t`.`owner_id` = :owner_id',
+      /**/ 'AND `t`.`id` = :tag_id',
+      /**/ 'AND `tu`.`target_id` = :target_id',
+      'LIMIT 1',
+    ]);
+
+    return (bool) count(db()->executeStatementAndReturn($sql, [
+      'owner_id' => Auth::i()->getCurrentUserId(),
+      'tag_id' => $tagId,
+      'target_id' => $targetId,
+    ])
+      ->fetchAll());
+  }
+
+  public function insertTagToUser($tagId, $targetId): bool
+  {
+    if (!$this->doUserHasTag(Auth::i()->getCurrentUserId(), $tagId)) {
+      throw new \Exception("Forbidden");
+    }
+
+    if ($this->doTagToUserExist($tagId, $targetId)) return true;
+
+    $values = [
+      'target_id' => $targetId,
+      'tag_id' => $tagId,
+    ];
 
     $db = app()->db();
     $sql = $db->sqlInsertQuery('tags_with_users', $values);
