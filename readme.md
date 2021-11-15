@@ -36,8 +36,8 @@
 * запустить скрипт /scripts/jumpstart.php
 * заполнить файл /env/env.php нужными значениями (vk_client_id - ID приложения; vk_client_secret - защищённый ключ)
 * запустить скрипт /scripts/db-migrate.php
-* `sass ./resources/scss/account-index.scss ./public/css/gen/account-index.css`
-* `sass ./resources/scss/base.scss ./public/css/gen/base.css`
+* (опционально; css-файл уже скомпилирован) `sass ./resources/scss/account-index.scss ./public/css/gen/account-index.css`
+* (опционально; css-файл уже скомпилирован) `sass ./resources/scss/base.scss ./public/css/gen/base.css`
 * `php -S localhost:8001 -t public` (из корневой папки проекта)
 
 # Что можно было ещё добавить и оптимизировать
