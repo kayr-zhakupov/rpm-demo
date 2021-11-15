@@ -86,12 +86,12 @@ class LazyScrollComponent {
 
     if (response.is_last_slice) {
       this._hasFullList = true
-      this._refreshListState()
     }
 
     this._scrollableEl.dataset.tags = response.tags_str
 
     cbOnEnd(true)
+    this._refreshListState()
   }
 
   _initScrollListener() {
@@ -158,7 +158,6 @@ class LazyScrollComponent {
   }
 
   _loadMore() {
-    console.log('_loadMore')
     this._refreshBusyState(true)
     const onEnd = () => this._refreshBusyState(false)
 

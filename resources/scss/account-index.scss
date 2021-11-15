@@ -9,7 +9,10 @@
   height: 100%;
 
   > .account-index-profile {
-    flex: 0 0 200px;
+    flex: 0 0 240px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
   }
 
   > .account-index-profiles-catalog {
