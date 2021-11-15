@@ -1,0 +1,80 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  color: #212529;
+  --color-primary: #0d6efd;
+  --color-fore-light: #f8f9fa;
+}
+
+hr {
+  margin: 1rem 0;
+  color: inherit;
+  background-color: currentColor;
+  border: 0;
+  opacity: 0.25;
+  height: 1px;
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 4rem;
+  z-index: 10;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.toast-container .toast + .toast {
+  margin-top: 1rem;
+}
+
+.toast {
+  padding: 1rem 1.5rem;
+  position: relative;
+  border: 1px solid gray;
+  display: none;
+  --accent-bg: #0d6efd;
+  z-index: 15;
+  background-color: #ffffff;
+}
+.toast:before {
+  content: "";
+  position: absolute;
+  width: 0.5rem;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--accent-bg, transparent);
+}
+.toast.toast-success {
+  --accent-bg: #198754;
+}
+.toast.toast-error {
+  --accent-bg: #dc3545;
+}
+.toast.--show {
+  display: block;
+}
+
+.--busy {
+  opacity: 0.25;
+  cursor: wait;
+}
+
+.btn-authorize-vk {
+  padding: 8px 16px;
+  background-color: #0077FF;
+  color: var(--color-fore-light);
+}
+
+/*# sourceMappingURL=base.css.map */
