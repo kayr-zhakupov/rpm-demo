@@ -63,7 +63,7 @@ class AjaxController
       switch ($action) {
         case 'insert_tag_to_user':
           Tags::i()->insertTagToUser($tagId, $targetId);
-          $successMessage = "Тэг добавлен";
+          $successMessage = "Тег добавлен";
           break;
 
         case 'insert_tag':
@@ -76,15 +76,15 @@ class AjaxController
           ], $newTagId);
 
           if ($_POST['do_insert_tag_to_user'] ?? false) {
-            Tags::i()->insertTagToUser($tagId, $targetId);
-          };
+            Tags::i()->insertTagToUser($newTagId, $targetId);
+          }
 
-          $successMessage = sprintf("Тэг `%s` создан", $name);
+          $successMessage = sprintf("Тег `%s` создан", $name);
           break;
 
         case 'delete_tag_to_user':
           Tags::i()->deleteTagToUser($tagId, $targetId);
-          $successMessage = "Тэг удалён";
+          $successMessage = "Тег удалён";
           break;
       }
 

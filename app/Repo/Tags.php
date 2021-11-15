@@ -39,7 +39,10 @@ class Tags
     $name = trim($values['name'] ?? '');
     $ownerId = $values['owner_id'] ?? null;
 
-    if ($this->doesTagWithNameExist($name, $ownerId)) return false;
+    if ($tag = $this->findTagByName($name, $ownerId)) {
+      $lastId = $tag['id'];
+      return false;
+    }
 
     $values = [
       'name' => $name,
@@ -65,17 +68,17 @@ class Tags
       ->fetchAll());
   }
 
-  public function doesTagWithNameExist($name, $ownerId): bool
+  public function findTagByName($name, $ownerId): ?array
   {
     $sql = implode(' ', [
-      'SELECT id FROM tags WHERE BINARY name = :name AND owner_id = :owner_id LIMIT 1',
+      'SELECT * FROM tags WHERE BINARY name = :name AND owner_id = :owner_id LIMIT 1',
     ]);
 
-    return (bool)count(db()->executeStatementAndReturn($sql, [
+    return arr_get(db()->executeStatementAndReturn($sql, [
       'name' => $name,
       'owner_id' => $ownerId,
     ])
-      ->fetchAll());
+      ->fetchAll(), '0');
   }
 
   public function doTagToUserExist($tagId, $targetId): bool
