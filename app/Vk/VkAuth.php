@@ -29,6 +29,7 @@ class VkAuth
     ?>
     <a
       href="<?= $this->getSignLink() ?>"
+      class="btn-authorize-vk"
     >Авторизоваться с ВК</a>
     <?php
 

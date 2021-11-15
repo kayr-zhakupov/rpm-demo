@@ -28,7 +28,6 @@
             id="<?= $checkboxId ?>"
             name="<?= $name ?>"
             data-id="<?= $tag->id ?>"
-            checked
           >
           <label
             for="<?= $checkboxId ?>"

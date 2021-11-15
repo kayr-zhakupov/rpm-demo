@@ -137,7 +137,7 @@ class LazyScrollComponent {
     checkboxEls.forEach(el => {
       el.checked && ids.push(el.dataset.id)
     })
-    return ((checkboxEls.length === ids.length) || (!ids.length)) ? '' : ids.join(',')
+    return (!ids.length) ? '' : ids.join(',')
   }
 
   _fetchFriendsSlice(count, offset, tagIds) {
