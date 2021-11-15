@@ -1,0 +1,130 @@
+.account-index-page {
+  padding: 2rem 0 0 4rem;
+}
+
+.account-index-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  height: 100%;
+}
+.account-index-container > .account-index-profile {
+  flex: 0 0 240px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+}
+.account-index-container > .account-index-profiles-catalog {
+  flex: 1;
+  height: 100%;
+  padding-left: 2rem;
+}
+
+.account-index-profile .profile-avatar-wrap {
+  width: 200px;
+  height: 200px;
+}
+
+.account-index-profiles-catalog .profiles-catalog-head {
+  height: 2rem;
+}
+.account-index-profiles-catalog .profiles-list-scrollable {
+  max-height: calc(100% - 2rem);
+  overflow-y: scroll;
+  padding-bottom: 2rem;
+  padding-right: 4rem;
+}
+
+.profiles-list-scrollable > * + * {
+  border-top: 1px solid gray;
+}
+.profiles-list-scrollable .__load-more {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.friend-tile {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 1rem 0.5rem 0;
+  position: relative;
+}
+.friend-tile .friend-avatar-wrap {
+  width: 100px;
+  height: 100px;
+  margin-right: 1rem;
+}
+.friend-tile .__online-badge {
+  color: #198754;
+}
+.friend-tile .__stretched-link::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  content: "";
+}
+
+.progress-bar {
+  height: 1rem;
+  background-color: #0d6efd;
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+  animation: 1s linear infinite progress-bar-stripes;
+}
+
+@keyframes progress-bar-stripes {
+  0% {
+    background-position-x: 1rem;
+  }
+}
+.tags-for-profile,
+.friend-tile .__tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.tags-for-profile {
+  margin: -4px;
+}
+
+.tag-for-profile-badge,
+.friend-tile .__tag {
+  padding: 4px 8px;
+  background-color: var(--color-primary);
+  color: var(--color-fore-light);
+  margin: 4px;
+}
+
+.tags-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.tags-filter > * + * {
+  margin-top: 4px;
+}
+
+.tag-filter-badge {
+  display: flex;
+  flex-direction: row;
+}
+.tag-filter-badge > .tag-filter-checkbox {
+  position: relative;
+  z-index: 1;
+  margin-left: 4px;
+}
+.tag-filter-badge > .tag-filter-label {
+  padding: 4px 8px 4px 32px;
+  margin-left: -24px;
+}
+
+.tag-filter-checkbox:checked + .tag-filter-label {
+  background-color: var(--color-primary);
+  color: var(--color-fore-light);
+}
+
+/*# sourceMappingURL=account-index.css.map */
