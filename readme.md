@@ -42,4 +42,7 @@
 
 # Что можно было ещё добавить и оптимизировать
 
-* подключить скрипты для независимой минификации css и js; НЕ webpack, поскольку он работает только с bundles
+* подключить кастомные скрипты для независимой минификации css и js, вместе с autoprefixer; НЕ webpack, поскольку он работает только с bundles
+* unique index (owner_id, name) для таблицы tags
+* unique index (target_id, tag_id) для таблицы tags_with_users
+* поле 'is_deleted' в таблице tags_with_users вместе с ON CONFLICT запросами
