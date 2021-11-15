@@ -14,9 +14,11 @@ use App\Foundation\AbstractModel;
  * @property ?string $photo_100
  * @property ?string $photo_200
  * @property bool $online
+ * @property ?string $deactivated
  *
  * extended:
  * @property ?\App\Models\TagRecord[] $tags
+ * @property ?int $common_count
  */
 class ProfileData extends AbstractModel
 {

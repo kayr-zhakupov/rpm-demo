@@ -8,6 +8,7 @@ use App\Repo\Routes;
 
 $profile = new ProfileData($profile);
 $displayName = $profile->displayName();
+$mutualFriendsCount = $profile->common_count;
 ?>
 
 <div class="friend-tile js-friend-tile">
@@ -21,6 +22,7 @@ $displayName = $profile->displayName();
       alt="<?= sprintf('Аватар пользователя %s', $displayName) ?>"
     >
   </div>
+
   <div class="friend-tile-main">
     <div><span><?= $displayName ?></span> <small class="__online-badge"><?= $profile->online ? 'онлайн' : '' ?></small>
     </div>
@@ -30,5 +32,11 @@ $displayName = $profile->displayName();
         <div class="__tag"><?= $tagRecord->name ?></div>
       <?php endforeach; ?>
     </div>
+
+    <?php if ($mutualFriendsCount): ?>
+      <div><small><?= sprintf("Общих друзей: %d", $mutualFriendsCount) ?></small></div>
+    <?php endif; ?>
+
   </div>
+
 </div>

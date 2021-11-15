@@ -1,38 +1,47 @@
 <?php
 /**
- * @see views/pages/account/index.php:71
+ * @see views/pages/account/index.php:68
  *
  * @var \App\Views\ProfilesCatalogView $profiles_catalog_view
+ * @var \App\Models\ProfileData $profile
  */
 ?>
 
-<div class="account-index-profiles-catalog">
+<?php if ($profile->deactivated): ?>
 
-  <?= $profiles_catalog_view->renderHead() ?>
+  <div>Страница удалена или заблокирована</div>
 
-  <div
-    class="profiles-list-scrollable js-infinite-scroll"
-    data-count="<?= $profiles_catalog_view->getRequest()->getItemsLength() ?>"
-    data-has-full-list="<?=
-    $profiles_catalog_view->getRequest()->getItemsLength() === $profiles_catalog_view->getRequest()->getTotalCount()
-    ?>"
-  >
+<?php else: ?>
 
-    <?php
-    foreach ($profiles_catalog_view->getItems() as $profile):
-      echo view_html('pages/account/friend-tile', [
-        'profile' => $profile,
-      ]);
-    endforeach;
-    ?>
+  <div class="account-index-profiles-catalog">
+
+    <?= $profiles_catalog_view->renderHead() ?>
 
     <div
-      class="__load-more js-load-more js-load-more-before"
-      style="height: <?= config('load_more_offset') ?>px"
+      class="profiles-list-scrollable js-infinite-scroll"
+      data-count="<?= $profiles_catalog_view->getRequest()->getItemsLength() ?>"
+      data-has-full-list="<?=
+      $profiles_catalog_view->getRequest()->getItemsLength() === $profiles_catalog_view->getRequest()->getTotalCount()
+      ?>"
     >
-      <div class="progress-bar"></div>
+
+      <?php
+      foreach ($profiles_catalog_view->getItems() as $profile):
+        echo view_html('pages/account/friend-tile', [
+          'profile' => $profile,
+        ]);
+      endforeach;
+      ?>
+
+      <div
+        class="__load-more js-load-more js-load-more-before"
+        style="height: <?= config('load_more_offset') ?>px"
+      >
+        <div class="progress-bar"></div>
+      </div>
+
     </div>
 
   </div>
 
-</div>
+<?php endif; ?>

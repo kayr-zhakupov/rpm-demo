@@ -93,7 +93,7 @@ class VkApi
   {
     $response = $this->fetchMethod('friends.getMutual', [
         'source_uid' => $sourceId,
-        'target_uids' => [$targetId],
+        'target_uids' => $targetId,
       ] + $params);
 
     return [
@@ -102,13 +102,14 @@ class VkApi
     ];
   }
 
-  /**
-   * @link https://vk.com/dev/users.get
-   * @param array|string $fields
-   */
-  public function fetchMyProfile($fields = ''): ProfileData
+  public function fetchMutualFriendsMultiple($sourceId, array $targetIds, array $params = [])
   {
-    return $this->fetchSingleProfile(null, $fields);
+    $response = $this->fetchMethod('friends.getMutual', [
+        'source_uid' => $sourceId,
+        'target_uids' => implode(',', $targetIds),
+      ] + $params);
+
+    return $response->getNestedValue('response');
   }
 
   /**

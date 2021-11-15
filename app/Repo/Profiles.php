@@ -4,7 +4,6 @@ namespace App\Repo;
 
 use App\Foundation\Concerns\IsSingleton;
 use App\Middleware\Auth;
-use App\Models\ProfileData;
 use App\Profile\ProfilesSliceRequest;
 use App\Vk\VkApi;
 
@@ -17,11 +16,6 @@ class Profiles
   public function vkApi()
   {
     return VkApi::make();
-  }
-
-  public function fetchMyProfile(): ProfileData
-  {
-    return $this->fetchProfileById(null);
   }
 
   /**
@@ -79,8 +73,8 @@ class Profiles
 
     $sqlCount = implode(' ', [
       'SELECT COUNT(*) AS total FROM (',
-      /**/'SELECT `tu`.`target_id`',
-      /**/$sqlCore,
+      /**/ 'SELECT `tu`.`target_id`',
+      /**/ $sqlCore,
       ') total',
     ]);
 
@@ -168,5 +162,35 @@ class Profiles
     }
 
     return array_values($profilesGroupedById);
+  }
+
+  /**
+   * Если хотя бы один пользователь удалён, выдаётся общая ошибка 18.
+   * @param $profileItems
+   * @return array|void[]
+   */
+  public function extendSliceItemsWithMutualFriendsCount($profileItems)
+  {
+    $allProfilesGroupedById = arr_key_by($profileItems, 'id');
+    $profilesFiltered = array_filter(
+      $allProfilesGroupedById,
+      function ($profile) {
+        return empty(arr_get($profile, 'deactivated'));
+      }
+    );
+
+    $stats = $this->vkApi()
+      ->fetchMutualFriendsMultiple(
+        Auth::i()->getCurrentUserId(),
+        array_keys($profilesFiltered),
+      );
+
+    foreach ($stats as $stat) {
+      $profileId = $stat['id'];
+
+      $allProfilesGroupedById[$profileId]['common_count'] = $stat['common_count'];
+    }
+
+    return array_values($allProfilesGroupedById);
   }
 }

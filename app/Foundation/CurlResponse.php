@@ -51,7 +51,7 @@ class CurlResponse
    * @param mixed $default
    * @return mixed
    */
-  public function getNestedValue(?string $path, $default = null)
+  public function getNestedValue(?string $path = null, $default = null)
   {
     return arr_get($this->getJsonDecoded(), $path, $default);
   }

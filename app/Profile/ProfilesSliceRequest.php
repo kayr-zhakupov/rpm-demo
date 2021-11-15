@@ -55,7 +55,11 @@ class ProfilesSliceRequest
         );
 
       $this->total_count = $sliceResponse['count'];
-      $this->items = Profiles::i()->extendSliceItemsWithTags($sliceResponse['items']);
+
+      $this->items = $sliceResponse['items'];
+      $this->items = Profiles::i()->extendSliceItemsWithMutualFriendsCount($this->items);
+      $this->items = Profiles::i()->extendSliceItemsWithTags($this->items);
+
       return;
     }
 

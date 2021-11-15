@@ -66,7 +66,7 @@ $isMyAccount = ($session && ((string)$session->user_id === (string)$profile->id)
   </div>
 
   <?php echo view_html(
-    'pages/account/profiles-catalog', compact('profiles_catalog_view')
+    'pages/account/profiles-catalog', compact('profiles_catalog_view', 'profile')
   ); ?>
 </div>
 
